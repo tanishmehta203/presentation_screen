@@ -9562,5 +9562,22 @@ def vericheck_page():
             st.session_state.page = st.session_state.page_history.pop()  # Go back to the previous page
          else:
             st.error("No previous page to go back to.")
-     
+   
+###HELPER
+
+UK Consumer Redesign Project
+
+Conducted detailed analysis, contributed to development tasks, and performed end-to-end testing to ensure seamless implementation.
+AUH Experian Link Upgrade
+
+Led analysis, development, and testing efforts for a critical upgrade, ensuring smooth integration and improved functionality.
+AUH Commercial Analysis
+
+Provided actionable insights through data analysis, supporting business decisions and enhancing commercial performance.
+Presentation Screen Development
+
+Built an interactive presentation screen using Python and Streamlit, streamlining data visualization for stakeholders.
+Welfare Team Initiatives
+
+Played an active role in organizing Republic Day celebrations and sports events, promoting team engagement and cultural spirit within the organization.
 
