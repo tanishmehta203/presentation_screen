@@ -4703,3 +4703,3802 @@ def main():
      
 if __name__ == "__main__":
     main()
+
+
+# app.py
+import streamlit as st
+from mains import display_form  # Import the form page function
+from Output import display_output  # Import the output page function
+from Equifax import main1  # Assuming main1 is the correct function name for the data page
+from Experian import experian_page  # Assuming main1 is the correct function name for the data page
+from illion import illion_page  # Assuming main1 is the correct function name for the data page
+from analyze import analyze_page # Assuming analyse_page is the correct function name for the anlayze page
+from response import response_page # Assuming response_page is the correct function name for the response page
+from request import request_page # Assuming request_page is the correct function name for the request page
+from raw import raw_page # Assuming raw_page is the correct function name for the raw page
+from summary import summary_page # Assuming summary_page is the correct function name for the summary page
+from aggregated import aggregated_page # Assuming aggregated_page is the correct function name for the aggregated page
+from demograph import demograph_page # Assuming aggregated_page is the correct function name for the aggregated page
+from vericheck import vericheck_page # Assuming aggregated_page is the correct function name for the aggregated page
+from fraud import fraud_page # Assuming aggregated_page is the correct function name for the aggregated page
+from aml import aml_page # Assuming aggregated_page is the correct function name for the aggregated page
+
+
+# Main logic for navigation
+def main():
+    # If there is no 'page' in session state, start on the form page
+    if 'page' not in st.session_state:
+        st.session_state.page = "form"  # Default to form page
+    
+
+    # Navigation control
+    if st.session_state.page == "form":
+       display_form()  # Show the form page
+    elif st.session_state.page == "output":
+       display_output()  # Show the output page
+    elif st.session_state.page == "equifax":
+       main1()  # Show the data page
+    elif st.session_state.page == "experian":
+       experian_page()# show the experian page
+    elif st.session_state.page == "illion":
+       illion_page() #show the illion page
+    elif st.session_state.page == "analyze":
+       analyze_page() #show the analyze page
+    elif st.session_state.page == "Response":
+       response_page() #show the response page
+    elif st.session_state.page == "Request":
+       request_page() #show the request page
+    elif st.session_state.page == "Demograph":
+        demograph_page() # show the demograph
+    elif st.session_state.page == "VeriCheck":
+        vericheck_page() # show the vericheck page
+    elif st.session_state.page == "AML":
+        aml_page() # show the aml page
+    elif st.session_state.page == "Fraud":
+        fraud_page() #show the fraud page
+    elif st.session_state.page == "Summary":
+        summary_page()  #show the summary page 
+    elif st.session_state.page == "Raw":
+        raw_page() #show the raw page
+    elif st.session_state.page == "Aggregated":
+        aggregated_page() #show the aggreagted
+
+if __name__ == "__main__":  # Corrected the name check
+    main()  # Call the main function to run the app
+
+#main.py
+
+import streamlit as st
+import pandas as pd
+import requests
+from lxml import etree
+
+# # API request and save function
+# def fetch_and_save_response(application_id):
+#     api_url = "https://your-api-endpoint.com/getData"  # Replace with actual API URL
+
+#     # Construct the request payload
+#     request_payload = {
+#         "ApplicationID": application_id
+#     }
+
+#     # Send POST request to the API
+#     response = requests.post(api_url, json=request_payload)
+
+#     if response.status_code == 200:
+#         response_data = response.json()  # Parse the JSON response
+
+#         # Convert JSON to XML and save as xyz.xml
+#         root = etree.Element("Root")
+#         for key, value in response_data.items():
+#             child = etree.SubElement(root, key)
+#             child.text = str(value)
+
+#         # Save XML response to a file
+#         xml_file_name = "xyz.xml"
+#         with open(xml_file_name, "wb") as f:
+#             f.write(etree.tostring(root, pretty_print=True))
+
+#         st.session_state.xml_file_path = xml_file_name  # Save the file path in session state
+#         st.success(f"Response saved successfully as {xml_file_name}")
+#     else:
+#         st.error(f"Failed to fetch data. Status code: {response.status_code}")
+
+
+#main page
+def display_form():
+
+# Display the image using st.image
+    st.image("logo.png", width=250)
+
+    st.markdown('<h1 class="centered-title">Search Criteria</h1>', unsafe_allow_html=True) #Search Criterian
+#styling 
+    st.markdown(
+        
+        """
+        <style>
+         .centered-title {
+            text-align: center;  
+            font-size: 40px;     
+            font-weight: bold;   
+            color: black;        
+        }
+        .reportview-container {
+            background-color: black;  
+            color: white;  
+            height: 10px;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        .st-emotion-cache-1vt4y43 {
+        display: inline-flex;
+       -webkit-box-align: center;
+        align-items: center;
+       -webkit-box-pack: center;
+        justify-content: center;
+        font-weight: 400;
+        padding: 0.25rem 0.75rem;
+        min-height: 2.5rem;
+         margin: 0px;
+         line-height: 1.6;
+        color: black !important;
+         width: auto;
+         user-select: none;
+         border: 1px solid rgba(49, 51, 63, 0.2);
+        float: center;
+    }
+        .search-label {
+            font-size: 35px;  
+            text-transform: uppercase;  
+            margin-top: 5px;
+        }
+        .required {
+            color: red;  
+        }
+        .custom-button {
+            background-color: #4CAF50; 
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-right: 10px; 
+        }
+        .custom-button-clear {
+            background-color: #f44336; 
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .st-emotion-cache-13ln4jf {
+            max-width: 100% !important;  
+            width: 100% !important;      
+            padding: 4rem 1rem 10rem; !important;
+        }
+        .css-1lcbmhc {
+            padding-left: 0 !important;  
+            padding-right: 0 !important; 
+        }
+        .form-container {
+            margin-left: 200%;  
+            margin-right: 200%;  
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+    
+#Arrangment of the information on the page
+    st.markdown(
+        """
+        <div class="reportview-container">
+           <div class="logo-container">
+            <div class="search-label">Search Criteria</div>
+        </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    
+    #form
+    if 'unique_id' not in st.session_state:
+        st.session_state.unique_id = ""
+    if 'application_id' not in st.session_state:
+        st.session_state.application_id = ""
+    if 'first_name' not in st.session_state:
+        st.session_state.first_name = ""
+    if 'last_name' not in st.session_state:
+        st.session_state.last_name = ""
+    if 'country_code' not in st.session_state:
+        st.session_state.country_code = ""
+    if 'application_date' not in st.session_state:
+        st.session_state.application_date = None
+    if 'application_time' not in st.session_state:
+        st.session_state.application_time = None
+    if 'group_member' not in st.session_state:
+        st.session_state.group_member = ""
+    if 'strategy_code' not in st.session_state:
+        st.session_state.strategy_code = ""
+    if 'search_type' not in st.session_state:
+        st.session_state.search_type = "Full Search"
+    if 'call_type' not in st.session_state:
+        st.session_state.call_type = "Consumer"
+
+   
+    with st.form(key="submit_form1"):
+        unique_id = st.text_input("Unique ID", value=st.session_state.unique_id)
+        application_id = st.text_input("Application ID *", value=st.session_state.application_id)
+        first_name = st.text_input("First Name", value=st.session_state.first_name)
+        last_name = st.text_input("Last Name", value=st.session_state.last_name)
+        country_code = st.text_input("Country Code", value=st.session_state.country_code)
+        application_date = st.date_input("Application Date", value=st.session_state.application_date)
+        application_time = st.time_input("Application Time", value=st.session_state.application_time)
+        group_member = st.text_input("Group Member", value=st.session_state.group_member)
+        strategy_code = st.text_input("Strategy Code", value=st.session_state.strategy_code)
+        search_type = st.selectbox("Search Type", ["Full Search", "Partial Search"], index=["Full Search", "Partial Search"].index(st.session_state.search_type))
+        call_type = st.selectbox("Call Type", ["Consumer", "Business"], index=["Consumer", "Business"].index(st.session_state.call_type))
+
+#submit info
+        submitted = st.form_submit_button("Submit")
+        if submitted:
+            if application_id:
+                st.session_state.form_data = {
+                    "Unique ID": unique_id,
+                    "Application ID": application_id,
+                    "First Name": first_name,
+                    "Last Name": last_name,
+                    "Country Code": country_code,
+                    "Application Date": application_date,
+                    "Application Time": application_time,
+                    "Group Member": group_member,
+                    "Strategy Code": strategy_code,
+                    "Search Type": search_type,
+                    "Call Type": call_type,
+                }
+                st.session_state.page = "output"  
+            else:
+                st.warning("Please enter the Application ID.")  
+    #clearCriteria Info            
+    if st.button("Clear Criteria"):
+        for key in ['unique_id', 'application_id', 'first_name', 'last_name', 'country_code', 
+                     'application_date', 'application_time', 'group_member', 'strategy_code', 
+                     'search_type', 'call_type']:
+            if key in st.session_state:
+                del st.session_state[key]
+
+        
+        st.session_state.unique_id = "   "
+        st.session_state.application_id = "   "
+        st.session_state.first_name = "   "
+        st.session_state.last_name = "   "
+        st.session_state.country_code = "   "
+        st.session_state.application_date = None
+        st.session_state.application_time = None
+        st.session_state.group_member = "   "
+        st.session_state.strategy_code = "   "
+        st.session_state.search_type = "Full Search"
+        st.session_state.call_type = "Consumer"
+
+        st.rerun()  
+        request.py
+import streamlit as st
+import pandas as pd
+import plotly.express as px
+from lxml import etree
+
+# Load the XML file
+def load_xml(file):
+    try:
+        tree = etree.parse(file)
+        root = tree.getroot()
+        return root
+    except Exception as e:
+        st.error(f"Error loading XML file: {e}")
+        return None
+
+# Extract Provenir ID and Unique ID from XML file
+def extract_ids_from_xml(root):
+    header_segment = root.find(".//HeaderSegment")
+    if header_segment is not None:
+        provenir_id = header_segment.get("ProvenirID", "N/A")
+        unique_id = header_segment.get("UniqueID", "N/A")
+        return provenir_id, unique_id
+
+    return "N/A", "N/A"
+
+# Function to go back to the previous page
+def go_back():
+    if 'page_history' in st.session_state and st.session_state.page_history:
+        st.session_state.page = st.session_state.page_history.pop()  # Go to the last visited page
+    else:
+        st.session_state.page = "form"  # Default to the form page if no history exists
+
+
+# Function to create Request page
+def request_page():
+    #Styling
+     st.markdown(""" 
+        <style>
+            .st-emotion-cache-13ln4jf {
+                max-width: 100% !important;
+                width: 100% !important;
+                padding: 4rem 1rem 10rem; !important;
+            }
+            .dataframe {
+                margin-right: 100px;
+            }
+            .css-1lcbmhc {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+        /* Style for the Provenir ID and Reference# */
+        .top-info {
+            position: absolute; 
+            top: 10px; 
+            right: 10px; 
+            text-align: right; 
+            font-size: 12px;
+            color: black;
+        }
+       
+        /* Align the text beside the logo */
+        .header-text {
+            display: inline-block;
+            vertical-align: middle;
+            font-size: 20px;
+            font-weight: bold;
+            color: black;
+        }
+        .st-emotion-cache-1vt4y43 {
+         display: inline-flex;
+         -webkit-box-align: center;
+         align-items: center;
+         -webkit-box-pack: center;
+         justify-content: center;
+         font-weight: 400;
+         padding: 0.25rem 0.75rem;
+         border-radius: 0.1rem;
+         margin: 4px;
+         line-height: 1.3;
+        color: black;
+        width: 110px;
+        user-select: none;
+        background-color: rgb(240 240 240);
+        border: 1.5px solid rgb(0 0 0);
+}
+.st-emotion-cache-463q5x {
+    margin: 0px;
+    padding-right: 2.75rem;
+    color: rgb(49, 51, 63);
+    border-radius: 0.5rem;
+    background-color: white;
+}
+
+
+    @media (max-width: 1024px) {
+        .st-emotion-cache-1vt4y43 {
+            width: 100%;  /* Make the buttons take full width on smaller screens */
+            margin-bottom: 10px;  /* Add space between buttons */
+        }
+    }
+
+    @media (max-width: 768px) {
+        .st-emotion-cache-1vt4y43 {
+            font-size: 12px;  /* Reduce the font size for smaller screens */
+            padding: 0.2rem 0.6rem;  /* Reduce padding for better fit */
+        }
+        .st-emotion-cache-165ax5l {
+    width: 90% !important;
+    margin-bottom: 1rem;
+    color: rgb(49, 51, 63);
+    border-collapse: collapse;
+    border: 1px solid rgba(49, 51, 63, 0.1);
+    margin-left: 50px;
+}
+    }
+      @media (max-width: 620px){
+    .st-emotion-cache-165ax5l {
+    width: 50% !important;
+    margin-bottom: 1rem;
+    color: rgb(49, 51, 63);
+    border-collapse: collapse;
+    border: 1px solid rgba(49, 51, 63, 0.1);
+    margin-left: 20px;
+}
+}
+.navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: white; /* Change to match your app's theme */
+            z-index: 1000; /* Ensure it stays on top of other elements */
+            padding: 10px; /* Optional padding */
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Optional border */
+        }
+        /* Add spacing below header */
+        .header-section {
+            padding-bottom: 20px;
+        }
+
+        </style>
+    """, unsafe_allow_html=True)
+     # Load the XML file for Provenir_id and Unique_id
+     file = './1_Account_035_Result.xml'
+     root = load_xml(file)
+
+     if root is None:
+        st.error("Failed to load XML file.")
+        return
+
+  
+     provenir_id, unique_id = extract_ids_from_xml(root)
+
+
+     st.markdown(f"""
+        <div class='top-info'>
+        <b>Provenir ID:</b> {provenir_id}<br>
+        <b>Unique ID:</b> {unique_id}
+        </div>
+    """, unsafe_allow_html=True)
+
+     st.image("logo.png", width=200) #logo Arrangment
+     st.markdown('<div class="navbar">', unsafe_allow_html=True)
+    # Navbar Buttons
+     if "page_history" not in st.session_state:
+        st.session_state.page_history = []
+
+    # Navbar Buttons
+     navbar = st.container()
+     with navbar:
+        col1, col2, col3, col4, col5, col6, col7, col8, col9, col10 = st.columns(10)
+
+        with col1:
+            if st.button("Request"):
+               st.session_state.page_history.append(st.session_state.page)
+               st.session_state.page = "Request"        
+        with col2:
+            if st.button("Response"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Response"
+
+        with col3:
+            if st.button("Demograph"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Demograph"
+        with col4:
+            if st.button("Analyze"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "analyze"
+        with col5:
+            if st.button("VeriCheck"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "VeriCheck"
+        with col6:
+            if st.button("AML"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "AML"
+        with col7:
+            if st.button("Fraud"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Fraud"
+        with col8:
+            if st.button("Raw"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Raw"
+        with col9:
+            if st.button("Aggregated"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Aggregated"
+        with col10:
+            if st.button("Summary"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Summary"
+
+     st.markdown('</div>', unsafe_allow_html=True)
+     
+     st.markdown(
+        """
+        <style>
+         .reportview-container {
+                background-color: black;  
+                color: white;  
+                height: 5px;
+                width: 100%;
+                margin-bottom: 30px;
+            }
+            .logo-container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        .st-emotion-cache-13ln4jf {
+            max-width: 100% !important;  
+            width: 100% !important;      
+            padding: 4rem 4rem 10rem !important;
+        }
+        .css-1lcbmhc {
+            padding-left: 0 !important;  
+            padding-right: 0 !important; 
+        }
+        .st-emotion-cache-165ax5l {
+           width: 70% !important;
+           margin-bottom: 1rem;
+            color: rgb(49, 51, 63);
+            border-collapse: collapse;
+            border: 1px solid rgba(49, 51, 63, 0.1);
+            margin-left: 180px; !important;
+        }
+       .st-emotion-cache-a51556 {
+           border-bottom: 1px solid rgba(49, 51, 63, 0.1);
+           border-right: 1px solid rgba(49, 51, 63, 0.1);
+           vertical-align: middle;
+           padding: 0.25rem 0.375rem;
+           font-weight: 400;
+           color: rgba(49, 51, 63, 0.6);
+           display: none;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+     #Arrangment of the information on the page
+     st.markdown(
+        """
+        <div class="reportview-container">
+           <div class="logo-container">
+        </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    
+        # Styling
+     st.markdown(
+            """
+            <style>
+            .st-emotion-cache-13ln4jf {
+                max-width: 100% !important;
+                width: 100% !important;
+                padding: 4rem 1rem 10rem; !important;
+            }
+            .dataframe {
+                margin-right: 100px;
+            }
+            .css-1lcbmhc {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
+       
+     if 'form_data' in st.session_state:
+        form_data = st.session_state.form_data
+
+    # Create a list to hold all rows of form data (3 rows for each bureau)
+        data_rows = [form_data.copy() for _ in range(3)]  # Create 3 copies of form_data
+
+    # Generate output in Table format without the "Credit Bureaus" column
+        data = pd.DataFrame(data_rows)
+
+        # Display the table
+        st.markdown(
+            """
+            <style>
+                .dataframe {
+                    border: 1px solid #ddd;
+                    padding: 8px;
+                    text-align: left;
+                    border-collapse: collapse;
+                    width: 85%;
+                    margin-left: 100px;
+                }
+                .dataframe th, .dataframe td {
+                    padding: 8px;
+                    border-bottom: 1px solid #ddd;
+                }
+                .dataframe tr:hover {
+                    background-color: #f5f5f5;
+                }
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
+        st.markdown(data.to_html(escape=False, index=False), unsafe_allow_html=True)
+
+
+ 
+        # Convert DataFrame to CSV format
+     csv_data = data.to_csv(index=False)
+
+    # Create two equal-width columns for "Download" and "Back" buttons
+     col1, col2 = st.columns([1, 1])  # Equal width columns
+
+     with col1:
+        # Download button for CSV
+        st.download_button(
+            label="Download",
+            data=csv_data,
+            file_name='bureau_data.csv',
+            mime='text/csv',
+        )
+
+     with col2:
+         # Back button   
+        if st.button("Back"):
+         if len(st.session_state.page_history) > 0:
+            st.session_state.page = st.session_state.page_history.pop()  # Go back to the previous page
+         else:
+            st.error("No previous page to go back to.")
+
+
+response.py
+import streamlit as st
+import pandas as pd
+import plotly.express as px
+from lxml import etree
+
+# Load the XML file
+def load_xml(file):
+    try:
+        tree = etree.parse(file)
+        root = tree.getroot()
+        return root
+    except Exception as e:
+        st.error(f"Error loading XML file: {e}")
+        return None
+    
+# Extract psummary data for analysis
+def extract_psummary_data(root):
+    psummary_data = []
+    
+    for psummary in root.xpath(".//PSUMMARY"):
+        creditor_name = psummary.findtext("CreditorName", default="N/A")
+        first_reported_limit_amt = int(psummary.findtext("FirstReportedLimitAmt", default=0))
+        current_limit = int(psummary.findtext("CurrentLimit", default=0))
+        account_status = psummary.findtext("AccountStatus", default="N/A")
+        credit_card_type = psummary.findtext("CreditCardType", default="N/A")
+        
+        psummary_data.append({
+            'CreditorName': creditor_name,
+            'FirstReportedLimitAmt': first_reported_limit_amt,
+            'CurrentLimit': current_limit,
+            'AccountStatus': account_status,
+            'CreditCardType': credit_card_type  
+        })
+        
+    return pd.DataFrame(psummary_data)
+
+# Function to load and extract data from the uploaded XML file
+def load_and_extract_data(xml_file_path):
+    try:
+        tree = etree.parse(xml_file_path)
+        root = tree.getroot()
+        data = extract_psummary_data(root)
+        st.session_state.data = data
+        st.success("Data successfully extracted and loaded.")
+    except Exception as e:
+        st.error(f"Error loading XML file: {e}")
+
+# Extract Provenir ID and Unique ID from XML file
+def extract_ids_from_xml(root):
+    header_segment = root.find(".//HeaderSegment")
+    if header_segment is not None:
+        provenir_id = header_segment.get("ProvenirID", "N/A")
+        unique_id = header_segment.get("UniqueID", "N/A")
+        return provenir_id, unique_id
+
+    return "N/A", "N/A"
+
+# Function to create Response page
+def response_page():
+    #Styling
+     st.markdown(""" 
+        <style>
+            .st-emotion-cache-13ln4jf {
+                max-width: 100% !important;
+                width: 100% !important;
+                padding: 4rem 1rem 10rem; !important;
+            }
+            .dataframe {
+                margin-right: 100px;
+                margin-left: 100px;
+            }
+            .css-1lcbmhc {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+        /* Style for the Provenir ID and Reference# */
+        .top-info {
+            position: absolute; 
+            top: 10px; 
+            right: 10px; 
+            text-align: right; 
+            font-size: 12px;
+            font-family: Arial, sans-serif;
+            color: black;
+        }
+       
+        /* Align the text beside the logo */
+        .header-text {
+            display: inline-block;
+            vertical-align: middle;
+            font-family: Arial, sans-serif;
+            font-size: 20px;
+            font-weight: bold;
+            color: black;
+        }
+      .st-emotion-cache-1vt4y43 {
+    display: inline-flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    font-weight: 400;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.1rem;
+    /* min-height: 1.5rem; */
+    margin: 4px;
+    line-height: 1.3;
+    color: black;
+    width: 110px;
+    user-select: none;
+    background-color: rgb(240 240 240);
+    border: 1.5px solid rgb(0 0 0);
+}
+.st-emotion-cache-463q5x {
+    margin: 0px;
+    padding-right: 2.75rem;
+    color: rgb(49, 51, 63);
+    border-radius: 0.5rem;
+    background-color: white;
+}
+
+
+    @media (max-width: 1024px) {
+        .st-emotion-cache-1vt4y43 {
+            width: 100%;  /* Make the buttons take full width on smaller screens */
+            margin-bottom: 10px;  /* Add space between buttons */
+        }
+    }
+
+    @media (max-width: 768px) {
+        .st-emotion-cache-1vt4y43 {
+            font-size: 12px;  /* Reduce the font size for smaller screens */
+            padding: 0.2rem 0.6rem;  /* Reduce padding for better fit */
+        }
+        .st-emotion-cache-165ax5l {
+    width: 90% !important;
+    margin-bottom: 1rem;
+    color: rgb(49, 51, 63);
+    border-collapse: collapse;
+    border: 1px solid rgba(49, 51, 63, 0.1);
+    margin-left: 50px;
+}
+    }
+      @media (max-width: 620px){
+    .st-emotion-cache-165ax5l {
+    width: 50% !important;
+    margin-bottom: 1rem;
+    color: rgb(49, 51, 63);
+    border-collapse: collapse;
+    border: 1px solid rgba(49, 51, 63, 0.1);
+    margin-left: 20px;
+}
+}
+.navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: white; /* Change to match your app's theme */
+            z-index: 1000; /* Ensure it stays on top of other elements */
+            padding: 10px; /* Optional padding */
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Optional border */
+        }
+        /* Add spacing below header */
+        .header-section {
+            padding-bottom: 20px;
+        }
+
+        </style>
+    """, unsafe_allow_html=True)
+     # Load the XML file for Provenir_id and Unique_id
+     file = './1_Account_035_Result.xml'
+     root = load_xml(file)
+
+     if root is None:
+        st.error("Failed to load XML file.")
+        return
+
+  
+     provenir_id, unique_id = extract_ids_from_xml(root)
+
+
+     st.markdown(f"""
+        <div class='top-info'>
+        <b>Provenir ID:</b> {provenir_id}<br>
+        <b>Unique ID:</b> {unique_id}
+        </div>
+    """, unsafe_allow_html=True)
+
+     st.image("logo.png", width=200) #logo Arrangment
+     st.markdown('<div class="navbar">', unsafe_allow_html=True)
+    # Navbar Buttons
+     if "page_history" not in st.session_state:
+        st.session_state.page_history = []
+
+    # Navbar Buttons
+     navbar = st.container()
+     with navbar:
+        col1, col2, col3, col4, col5, col6, col7, col8, col9, col10 = st.columns(10)
+
+        with col1:
+            if st.button("Request"):
+               st.session_state.page_history.append(st.session_state.page)
+               st.session_state.page = "Request"        
+        with col2:
+            if st.button("Response"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Response"
+
+        with col3:
+            if st.button("Demograph"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Demograph"
+        with col4:
+            if st.button("Analyze"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "analyze"
+        with col5:
+            if st.button("VeriCheck"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "VeriCheck"
+        with col6:
+            if st.button("AML"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "AML"
+        with col7:
+            if st.button("Fraud"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Fraud"
+        with col8:
+            if st.button("Raw"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Raw"
+        with col9:
+            if st.button("Aggregated"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Aggregated"
+        with col10:
+            if st.button("Summary"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Summary"
+
+     st.markdown('</div>', unsafe_allow_html=True)
+     
+     st.markdown(
+        """
+        <style>
+         .reportview-container {
+                background-color: black;  
+                color: white;  
+                height: 5px;
+                width: 100%;
+                margin-bottom: 30px;
+            }
+            .logo-container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        .st-emotion-cache-13ln4jf {
+            max-width: 100% !important;  
+            width: 100% !important;      
+            padding: 4rem 4rem 10rem !important;
+        }
+        .css-1lcbmhc {
+            padding-left: 0 !important;  
+            padding-right: 0 !important; 
+        }
+        .st-emotion-cache-165ax5l {
+           width: 70% !important;
+           margin-bottom: 1rem;
+            color: rgb(49, 51, 63);
+            border-collapse: collapse;
+            border: 1px solid rgba(49, 51, 63, 0.1);
+            margin-left: 180px; !important;
+        }
+       .st-emotion-cache-a51556 {
+           border-bottom: 1px solid rgba(49, 51, 63, 0.1);
+           border-right: 1px solid rgba(49, 51, 63, 0.1);
+           vertical-align: middle;
+           padding: 0.25rem 0.375rem;
+           font-weight: 400;
+           color: rgba(49, 51, 63, 0.6);
+           display: none;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+     #Arrangment of the information on the page
+     st.markdown(
+        """
+        <div class="reportview-container">
+           <div class="logo-container">
+        </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+     file_path = './1_Account_035_Result.xml'
+
+    # Read and display the XML content
+     with open(file_path, 'r') as file:
+        xml_content = file.read()
+
+    # Create two columns for the header and download button side by side
+     col1, col2 = st.columns([3, 1])
+
+     with col1:
+        st.subheader("XML File Content")
+    
+     with col2:
+        st.download_button(
+            label="Download",
+            data=xml_content,
+            file_name="response.xml",
+            mime="application/xml"
+        )
+
+    # Display the XML content in a code block below
+     st.code(xml_content, language='xml')
+
+     # Back button   
+     if st.button("Back"):
+         if len(st.session_state.page_history) > 0:
+            st.session_state.page = st.session_state.page_history.pop()  # Go back to the previous page
+         else:
+            st.error("No previous page to go back to.")
+
+summary.py
+import streamlit as st
+from lxml import etree
+
+# Load the XML file
+def load_xml(file):
+    try:
+        tree = etree.parse(file)
+        root = tree.getroot()
+        return root
+    except Exception as e:
+        st.error(f"Error loading XML file: {e}")
+        return None
+    
+
+
+# Extract Provenir ID and Unique ID from XML file
+def extract_ids_from_xml(root):
+    header_segment = root.find(".//HeaderSegment")
+    if header_segment is not None:
+        provenir_id = header_segment.get("ProvenirID", "N/A")
+        unique_id = header_segment.get("UniqueID", "N/A")
+        return provenir_id, unique_id
+
+    return "N/A", "N/A"
+
+# Function to extract name and value from aggregated data
+def extract_data_for_account_lxml(element):  
+    aggregated_data = []
+    interface_aggregations = element.xpath(".//InterfaceAggregations")
+
+    for interface in interface_aggregations:
+        aggregation_locals = interface.xpath(".//AggregationLocal")
+        for agg_local in aggregation_locals:
+            aggregated_items = agg_local.xpath("./Aggregated")
+            for agg_item in aggregated_items:
+                name = agg_item.get("Name")
+                value = agg_item.get("Value")
+                aggregated_data.append((name, value))  # Collect name and value as tuples
+    return aggregated_data  # Return the aggregated data
+
+# Function to display summary information based on extracted aggregated data
+def display_summary_info(aggregated_data):
+    # Ensure there is aggregated data to display
+    if aggregated_data:
+        # For this example, we will take the first name and value
+        name, value = aggregated_data[0]  # Adjust as needed (or implement a selection mechanism)
+    else:
+        name, value = "N/A", "N/A"
+        
+    # Display the summary information using the HTML template
+    st.markdown(f"""
+    <div style="
+        border: 2px solid black; 
+        padding: 10px; 
+        border-radius: 10px;
+        background-color: #f9f9f9;
+        ">
+        <h1 style="font-size: 18px;">
+            This applicant currently holds several open accounts, with the newest account being <b>{name}</b> months old. The total default unpaid amount is <b>{value}</b>, indicating a history of potential financial distress. These insights help underwriters assess the creditworthiness of the applicant by providing a snapshot of their current financial obligations and the recency of their credit activity.
+        </h1>
+    </div>
+    """, unsafe_allow_html=True)
+        
+# Function to create Summary page
+def summary_page():
+    #Styling
+     st.markdown(""" 
+        <style>
+            .st-emotion-cache-13ln4jf {
+                max-width: 100% !important;
+                width: 100% !important;
+                padding: 4rem 1rem 10rem; !important;
+            }
+            .dataframe {
+                margin-right: 100px;
+                margin-left: 100px;
+            }
+            .css-1lcbmhc {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+        /* Style for the Provenir ID and Reference# */
+        .top-info {
+            position: absolute; 
+            top: 10px; 
+            right: 10px; 
+            text-align: right; 
+            font-size: 12px;
+            font-family: Arial, sans-serif;
+            color: black;
+        }
+       
+        /* Align the text beside the logo */
+        .header-text {
+            display: inline-block;
+            vertical-align: middle;
+            font-family: Arial, sans-serif;
+            font-size: 20px;
+            font-weight: bold;
+            color: black;
+        }
+      .st-emotion-cache-1vt4y43 {
+    display: inline-flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    font-weight: 400;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.1rem;
+    /* min-height: 1.5rem; */
+    margin: 20px;
+    line-height: 1.3;
+    color: black;
+    width: 110px;
+    user-select: none;
+    background-color: rgb(240 240 240);
+    border: 1.5px solid rgb(0 0 0);
+}
+.st-emotion-cache-463q5x {
+    margin: 0px;
+    padding-right: 2.75rem;
+    color: rgb(49, 51, 63);
+    border-radius: 0.5rem;
+    background-color: white;
+}
+
+
+    @media (max-width: 1024px) {
+        .st-emotion-cache-1vt4y43 {
+            width: 100%;  /* Make the buttons take full width on smaller screens */
+            margin-bottom: 10px;  /* Add space between buttons */
+        }
+    }
+
+    @media (max-width: 768px) {
+        .st-emotion-cache-1vt4y43 {
+            font-size: 12px;  /* Reduce the font size for smaller screens */
+            padding: 0.2rem 0.6rem;  /* Reduce padding for better fit */
+        }
+        .st-emotion-cache-165ax5l {
+    width: 90% !important;
+    margin-bottom: 1rem;
+    color: rgb(49, 51, 63);
+    border-collapse: collapse;
+    border: 1px solid rgba(49, 51, 63, 0.1);
+    margin-left: 50px;
+}
+    }
+      @media (max-width: 620px){
+    .st-emotion-cache-165ax5l {
+    width: 50% !important;
+    margin-bottom: 1rem;
+    color: rgb(49, 51, 63);
+    border-collapse: collapse;
+    border: 1px solid rgba(49, 51, 63, 0.1);
+    margin-left: 20px;
+}
+}
+.navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: white; /* Change to match your app's theme */
+            z-index: 1000; /* Ensure it stays on top of other elements */
+            padding: 10px; /* Optional padding */
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Optional border */
+        }
+        /* Add spacing below header */
+        .header-section {
+            padding-bottom: 20px;
+        }
+
+        </style>
+    """, unsafe_allow_html=True)
+     
+     # Load the XML file for Provenir_id and Unique_id
+     file = './1_Account_035_Result.xml'
+     root = load_xml(file)
+
+     if root is None:
+        st.error("Failed to load XML file.")
+        return
+
+  
+     provenir_id, unique_id = extract_ids_from_xml(root)
+
+
+     st.markdown(f"""
+        <div class='top-info'>
+        <b>Provenir ID:</b> {provenir_id}<br>
+        <b>Unique ID:</b> {unique_id}
+        </div>
+    """, unsafe_allow_html=True)
+
+     st.image("logo.png", width=200) #logo Arrangment
+     st.markdown('<div class="navbar">', unsafe_allow_html=True)
+    # Navbar Buttons
+     if "page_history" not in st.session_state:
+        st.session_state.page_history = []
+
+    # Navbar Buttons
+     navbar = st.container()
+     with navbar:
+        col1, col2, col3, col4, col5, col6, col7, col8, col9, col10 = st.columns(10)
+
+        with col1:
+            if st.button("Request"):
+               st.session_state.page_history.append(st.session_state.page)
+               st.session_state.page = "Request"        
+        with col2:
+            if st.button("Response"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Response"
+
+        with col3:
+            if st.button("Demograph"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Demograph"
+        with col4:
+            if st.button("Analyze"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "analyze"
+        with col5:
+            if st.button("VeriCheck"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "VeriCheck"
+        with col6:
+            if st.button("AML"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "AML"
+        with col7:
+            if st.button("Fraud"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Fraud"
+        with col8:
+            if st.button("Raw"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Raw"
+        with col9:
+            if st.button("Aggregated"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Aggregated"
+        with col10:
+            if st.button("Summary"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Summary"
+
+     st.markdown('</div>', unsafe_allow_html=True)
+     
+     st.markdown(
+        """
+        <style>
+         .reportview-container {
+                background-color: black;  
+                color: white;  
+                height: 5px;
+                width: 100%;
+                margin-bottom: 30px;
+            }
+            .logo-container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        .st-emotion-cache-13ln4jf {
+            max-width: 100% !important;  
+            width: 100% !important;      
+            padding: 4rem 4rem 10rem !important;
+        }
+        .css-1lcbmhc {
+            padding-left: 0 !important;  
+            padding-right: 0 !important; 
+        }
+        .st-emotion-cache-165ax5l {
+           width: 70% !important;
+           margin-bottom: 1rem;
+            color: rgb(49, 51, 63);
+            border-collapse: collapse;
+            border: 1px solid rgba(49, 51, 63, 0.1);
+            margin-left: 180px; !important;
+        }
+       .st-emotion-cache-a51556 {
+           border-bottom: 1px solid rgba(49, 51, 63, 0.1);
+           border-right: 1px solid rgba(49, 51, 63, 0.1);
+           vertical-align: middle;
+           padding: 0.25rem 0.375rem;
+           font-weight: 400;
+           color: rgba(49, 51, 63, 0.6);
+           display: none;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+     #Arrangment of the information on the page
+     st.markdown(
+        """
+        <div class="reportview-container">
+           <div class="logo-container">
+        </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    # Extract aggregated data
+     aggregated_data = extract_data_for_account_lxml(root)
+
+    # Call the display function to show the summary
+     display_summary_info(aggregated_data)
+     
+      # Back button   
+     if st.button("Back"):
+         if len(st.session_state.page_history) > 0:
+            st.session_state.page = st.session_state.page_history.pop()  # Go back to the previous page
+         else:
+            st.error("No previous page to go back to.")
+
+
+     #experian.py
+import streamlit as st
+import pandas as pd
+import plotly.express as px
+from lxml import etree
+
+
+# Load the XML file
+def load_xml(file):
+    try:
+        tree = etree.parse(file)
+        root = tree.getroot()
+        return root
+    except Exception as e:
+        st.error(f"Error loading XML file: {e}")
+        return None
+
+# #Extracting Of Raw And Aggregated data from Xml file
+def extract_data_for_account_lxml(element):
+    raw_data = []
+    aggregated_data = []
+
+    interface_aggregations = element.xpath(".//InterfaceAggregations")
+
+    for interface in interface_aggregations:
+        aggregation_locals = interface.xpath(".//AggregationLocal")
+        for agg_local in aggregation_locals:
+            raw_items = agg_local.xpath("./Raw")
+            for raw_item in raw_items:
+                name = raw_item.get("Name")
+                value = raw_item.get("Value")
+                raw_data.append({"Name": name, "Value": value})
+
+            aggregated_items = agg_local.xpath("./Aggregated")
+            for agg_item in aggregated_items:
+                name = agg_item.get("Name")
+                value = agg_item.get("Value")
+                description = agg_item.get("Description")
+
+                # Initialize category variable
+                category = ""
+
+                # Determine the category based on the name
+                if name.startswith("G1_"):
+                    category = "G1_Demographics"
+                elif name.startswith("G2_"):
+                    category = "G2_Age"
+                elif name.startswith("G3_"):
+                    category = "G3_Credit History"
+                elif name.startswith("G4_"):
+                    category = "G4_Employment"
+                elif name.startswith("G5_"):
+                    category = "G5_Financial Status"
+                elif name.startswith("G6_"):
+                    category = "G6_Inquiries"
+                elif name.startswith("G7_"):
+                    category = "G7_Public Records"
+                elif name.startswith("G8_"):
+                    category = "G8_Collections"
+                elif name.startswith("G9_"):
+                    category = "G9_Fraud"
+                elif name.startswith("G10_"):
+                    category = "G10_Account Details"
+                else:
+                    category = "Other"
+
+                # Append to aggregated_data as a row
+                aggregated_data.append([
+                    category,
+                    name,
+                    value,
+                    description,
+                ])
+
+    # Custom sorting order
+    custom_category_order = {
+        "G1_Demographics": 1,
+        "G2_Age": 2,
+        "G3_Credit History": 3,
+        "G4_Employment": 4,
+        "G5_Financial Status": 5,
+        "G6_Inquiries": 6,
+        "G7_Public Records": 7,
+        "G8_Collections": 8,
+        "G9_Fraud": 9,
+        "G10_Account Details": 10,
+        "Other": 11,
+    }
+
+    # Sort the aggregated data by category and then by Name
+    aggregated_data.sort(key=lambda x: (custom_category_order.get(x[0], 11), x[1]))
+
+    return raw_data, aggregated_data
+
+def display_data(aggregated_data):
+    current_category = None
+    for entry in aggregated_data:
+        category = entry["Category"]
+        
+        # Only print the category header if it's different from the last printed category
+        if category != current_category:
+            if current_category is not None:
+                print()  # Add a blank line before the next category
+            print(category)  # Print category header
+            current_category = category
+            
+        # Print data entries with specific formatting
+        print(f"{entry['Name']}\t{entry['Value']}\t{entry['Description']}")  # Print data entries
+
+
+# Extract Provenir ID and Unique ID from XML file
+def extract_ids_from_xml(root):
+    header_segment = root.find(".//HeaderSegment")
+    if header_segment is not None:
+        provenir_id = header_segment.get("ProvenirID", "N/A")
+        unique_id = header_segment.get("UniqueID", "N/A")
+        return provenir_id, unique_id
+
+    return "N/A", "N/A"
+
+
+# Main function Experian
+def experian_page():
+    
+ #Styling
+    st.markdown(""" 
+        <style>
+        /* Style for the Provenir ID and Reference# */
+        .top-info {
+            position: absolute; 
+            top: 10px; 
+            right: 10px; 
+            text-align: right; 
+            font-size: 12px;
+            font-family: Arial, sans-serif;
+            color: black;
+        }
+       
+        /* Align the text beside the logo */
+        .header-text {
+            display: inline-block;
+            vertical-align: middle;
+            font-family: Arial, sans-serif;
+            font-size: 20px;
+            font-weight: bold;
+            color: black;
+        }
+      .st-emotion-cache-1vt4y43 {
+    display: inline-flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    font-weight: 400;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.1rem;
+    /* min-height: 1.5rem; */
+    margin: 4px;
+    line-height: 1.3;
+    color: black;
+    width: 110px;
+    user-select: none;
+    background-color: rgb(240 240 240);
+    border: 1.5px solid rgb(0 0 0);
+}
+.st-emotion-cache-463q5x {
+    margin: 0px;
+    padding-right: 2.75rem;
+    color: rgb(49, 51, 63);
+    border-radius: 0.5rem;
+    background-color: white;
+}
+
+
+    @media (max-width: 1024px) {
+        .st-emotion-cache-1vt4y43 {
+            width: 100%;  /* Make the buttons take full width on smaller screens */
+            margin-bottom: 10px;  /* Add space between buttons */
+        }
+    }
+
+    @media (max-width: 768px) {
+        .st-emotion-cache-1vt4y43 {
+            font-size: 12px;  /* Reduce the font size for smaller screens */
+            padding: 0.2rem 0.6rem;  /* Reduce padding for better fit */
+        }
+        .st-emotion-cache-165ax5l {
+    width: 90% !important;
+    margin-bottom: 1rem;
+    color: rgb(49, 51, 63);
+    border-collapse: collapse;
+    border: 1px solid rgba(49, 51, 63, 0.1);
+    margin-left: 50px;
+}
+    }
+      @media (max-width: 620px){
+    .st-emotion-cache-165ax5l {
+    width: 50% !important;
+    margin-bottom: 1rem;
+    color: rgb(49, 51, 63);
+    border-collapse: collapse;
+    border: 1px solid rgba(49, 51, 63, 0.1);
+    margin-left: 20px;
+}
+}
+.navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: white; /* Change to match your app's theme */
+            z-index: 1000; /* Ensure it stays on top of other elements */
+            padding: 10px; /* Optional padding */
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Optional border */
+        }
+        /* Add spacing below header */
+        .header-section {
+            padding-bottom: 20px;
+        }
+
+        </style>
+    """, unsafe_allow_html=True)
+
+    # Load the XML file for Provenir_id and Unique_id
+    file = './1_Account_035_Result.xml'
+    root = load_xml(file)
+
+    if root is None:
+        st.error("Failed to load XML file.")
+        return
+
+  
+    provenir_id, unique_id = extract_ids_from_xml(root)
+
+
+    st.markdown(f"""
+        <div class='top-info'>
+        <b>Provenir ID:</b> {provenir_id}<br>
+        <b>Unique ID:</b> {unique_id}
+        </div>
+    """, unsafe_allow_html=True)
+
+    st.image("logo.png", width=200) #logo Arrangment
+    
+    st.markdown('<div class="navbar">', unsafe_allow_html=True)
+    # Navbar Buttons
+    if "page_history" not in st.session_state:
+        st.session_state.page_history = []
+
+    # Navbar Buttons
+    navbar = st.container()
+    with navbar:
+        col1, col2, col3, col4, col5, col6, col7, col8, col9, col10 = st.columns(10)
+
+        with col1:
+            if st.button("Request"):
+               st.session_state.page_history.append(st.session_state.page)
+               st.session_state.page = "Request"        
+        with col2:
+            if st.button("Response"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Response"
+
+        with col3:
+            if st.button("Demograph"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Demograph"
+        with col4:
+            if st.button("Analyze"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "analyze"
+        with col5:
+            if st.button("VeriCheck"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "VeriCheck"
+        with col6:
+            if st.button("AML"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "AML"
+        with col7:
+            if st.button("Fraud"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Fraud"
+        with col8:
+            if st.button("Raw"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Raw"
+        with col9:
+            if st.button("Aggregated"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Aggregated"
+        with col10:
+            if st.button("Summary"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Summary"
+
+    st.markdown('</div>', unsafe_allow_html=True)
+     
+                
+#Styling
+    st.markdown(
+        """
+        <style>
+         .reportview-container {
+                background-color: black;  
+                color: white;  
+                height: 5px;
+                width: 100%;
+                margin-bottom: 30px;
+            }
+            .logo-container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .dataframe {
+                margin-right: 500px;
+                margin-left:500px;
+            }
+       
+        .st-emotion-cache-13ln4jf {
+            max-width: 100% !important;  
+            width: 100% !important;      
+            padding: 4rem 4rem 10rem !important;
+        }
+        .css-1lcbmhc {
+            padding-left: 0 !important;  
+            padding-right: 0 !important; 
+        }
+        .st-emotion-cache-165ax5l {
+           width: 70% !important;
+           margin-bottom: 1rem;
+            color: rgb(49, 51, 63);
+            border-collapse: collapse;
+            border: 1px solid rgba(49, 51, 63, 0.1);
+            margin-left: 180px; !important;
+        }
+       .st-emotion-cache-a51556 {
+           border-bottom: 1px solid rgba(49, 51, 63, 0.1);
+           border-right: 1px solid rgba(49, 51, 63, 0.1);
+           vertical-align: middle;
+           padding: 0.25rem 0.375rem;
+           font-weight: 400;
+           color: rgba(49, 51, 63, 0.6);
+           display: none;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+#Arrangment of the information on the page
+    st.markdown(
+        """
+        <div class="reportview-container">
+           <div class="logo-container">
+        </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    st.title("Aggregated Data")
+    # Extract raw data using the existing function
+    raw_data, aggregated_data = extract_data_for_account_lxml(root)
+
+    # Convert raw data to a DataFrame for display
+    agg_df = pd.DataFrame(aggregated_data)
+    if not agg_df.empty:
+     st.table(agg_df)  # Display the raw data in a table format
+        
+         # Back button   
+    if st.button("Back"):
+         if len(st.session_state.page_history) > 0:
+            st.session_state.page = st.session_state.page_history.pop()  # Go back to the previous page
+         else:
+            st.error("No previous page to go back to.")
+
+#equifax.py
+import streamlit as st
+import pandas as pd
+import plotly.express as px
+from lxml import etree
+
+
+
+# Load the XML file
+def load_xml(file):
+    try:
+        tree = etree.parse(file)
+        root = tree.getroot()
+        return root
+    except Exception as e:
+        st.error(f"Error loading XML file: {e}")
+        return None
+
+# #Extracting Of Raw And Aggregated data from Xml file
+def extract_data_for_account_lxml(element):
+    raw_data = []
+    aggregated_data = []
+
+    interface_aggregations = element.xpath(".//InterfaceAggregations")
+
+    for interface in interface_aggregations:
+        aggregation_locals = interface.xpath(".//AggregationLocal")
+        for agg_local in aggregation_locals:
+            raw_items = agg_local.xpath("./Raw")
+            for raw_item in raw_items:
+                name = raw_item.get("Name")
+                value = raw_item.get("Value")
+                raw_data.append({"Name": name, "Value": value})
+
+            aggregated_items = agg_local.xpath("./Aggregated")
+            for agg_item in aggregated_items:
+                name = agg_item.get("Name")
+                value = agg_item.get("Value")
+                description = agg_item.get("Description")
+
+                # Initialize category variable
+                category = ""
+
+                # Determine the category based on the name
+                if name.startswith("G1_"):
+                    category = "G1_Demographics"
+                elif name.startswith("G2_"):
+                    category = "G2_Age"
+                elif name.startswith("G3_"):
+                    category = "G3_Credit History"
+                elif name.startswith("G4_"):
+                    category = "G4_Employment"
+                elif name.startswith("G5_"):
+                    category = "G5_Financial Status"
+                elif name.startswith("G6_"):
+                    category = "G6_Inquiries"
+                elif name.startswith("G7_"):
+                    category = "G7_Public Records"
+                elif name.startswith("G8_"):
+                    category = "G8_Collections"
+                elif name.startswith("G9_"):
+                    category = "G9_Fraud"
+                elif name.startswith("G10_"):
+                    category = "G10_Account Details"
+                else:
+                    category = "Other"
+
+                # Append to aggregated_data as a row
+                aggregated_data.append([
+                    category,
+                    name,
+                    value,
+                    description,
+                ])
+
+    # Custom sorting order
+    custom_category_order = {
+        "G1_Demographics": 1,
+        "G2_Age": 2,
+        "G3_Credit History": 3,
+        "G4_Employment": 4,
+        "G5_Financial Status": 5,
+        "G6_Inquiries": 6,
+        "G7_Public Records": 7,
+        "G8_Collections": 8,
+        "G9_Fraud": 9,
+        "G10_Account Details": 10,
+        "Other": 11,
+    }
+
+    # Sort the aggregated data by category and then by Name
+    aggregated_data.sort(key=lambda x: (custom_category_order.get(x[0], 11), x[1]))
+
+    return raw_data, aggregated_data
+
+def display_data(aggregated_data):
+    current_category = None
+    for entry in aggregated_data:
+        category = entry["Category"]
+        
+        # Only print the category header if it's different from the last printed category
+        if category != current_category:
+            if current_category is not None:
+                print()  # Add a blank line before the next category
+            print(category)  # Print category header
+            current_category = category
+            
+        # Print data entries with specific formatting
+        print(f"{entry['Name']}\t{entry['Value']}\t{entry['Description']}")  # Print data entries
+
+
+# Extract Provenir ID and Unique ID from XML file
+def extract_ids_from_xml(root):
+    header_segment = root.find(".//HeaderSegment")
+    if header_segment is not None:
+        provenir_id = header_segment.get("ProvenirID", "N/A")
+        unique_id = header_segment.get("UniqueID", "N/A")
+        return provenir_id, unique_id
+
+    return "N/A", "N/A"
+
+# Main function Equifax
+def main1():
+    
+ #Styling
+    st.markdown(""" 
+        <style>
+        /* Style for the Provenir ID and Reference# */
+        .top-info {
+            position: absolute; 
+            top: 10px; 
+            right: 10px; 
+            text-align: right; 
+            font-size: 12px;
+            font-family: Arial, sans-serif;
+            color: black;
+        }
+       
+        /* Align the text beside the logo */
+        .header-text {
+            display: inline-block;
+            vertical-align: middle;
+            font-family: Arial, sans-serif;
+            font-size: 20px;
+            font-weight: bold;
+            color: black;
+        }
+      .st-emotion-cache-1vt4y43 {
+    display: inline-flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    font-weight: 400;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.1rem;
+    /* min-height: 1.5rem; */
+    margin: 4px;
+    line-height: 1.3;
+    color: black;
+    width: 110px;
+    user-select: none;
+    background-color: rgb(240 240 240);
+    border: 1.5px solid rgb(0 0 0);
+}
+.st-emotion-cache-463q5x {
+    margin: 0px;
+    padding-right: 2.75rem;
+    color: rgb(49, 51, 63);
+    border-radius: 0.5rem;
+    background-color: white;
+}
+
+
+    @media (max-width: 1024px) {
+        .st-emotion-cache-1vt4y43 {
+            width: 100%;  /* Make the buttons take full width on smaller screens */
+            margin-bottom: 10px;  /* Add space between buttons */
+        }
+    }
+
+    @media (max-width: 768px) {
+        .st-emotion-cache-1vt4y43 {
+            font-size: 12px;  /* Reduce the font size for smaller screens */
+            padding: 0.2rem 0.6rem;  /* Reduce padding for better fit */
+        }
+        .st-emotion-cache-165ax5l {
+    width: 90% !important;
+    margin-bottom: 1rem;
+    color: rgb(49, 51, 63);
+    border-collapse: collapse;
+    border: 1px solid rgba(49, 51, 63, 0.1);
+    margin-left: 50px;
+}
+    }
+      @media (max-width: 620px){
+    .st-emotion-cache-165ax5l {
+    width: 50% !important;
+    margin-bottom: 1rem;
+    color: rgb(49, 51, 63);
+    border-collapse: collapse;
+    border: 1px solid rgba(49, 51, 63, 0.1);
+    margin-left: 20px;
+}
+}
+.navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: white; /* Change to match your app's theme */
+            z-index: 1000; /* Ensure it stays on top of other elements */
+            padding: 10px; /* Optional padding */
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Optional border */
+        }
+        /* Add spacing below header */
+        .header-section {
+            padding-bottom: 20px;
+        }
+
+        </style>
+    """, unsafe_allow_html=True)
+
+    # Load the XML file for Provenir_id and Unique_id
+    file = './1_Account_035_Result.xml'
+    root = load_xml(file)
+
+    if root is None:
+        st.error("Failed to load XML file.")
+        return
+
+  
+    provenir_id, unique_id = extract_ids_from_xml(root)
+
+
+    st.markdown(f"""
+        <div class='top-info'>
+        <b>Provenir ID:</b> {provenir_id}<br>
+        <b>Unique ID:</b> {unique_id}
+        </div>
+    """, unsafe_allow_html=True)
+
+    st.image("logo.png", width=200) #logo Arrangment
+    
+    st.markdown('<div class="navbar">', unsafe_allow_html=True)
+    # Navbar Buttons
+    if "page_history" not in st.session_state:
+        st.session_state.page_history = []
+
+    # Navbar Buttons
+    navbar = st.container()
+    with navbar:
+        col1, col2, col3, col4, col5, col6, col7, col8, col9, col10 = st.columns(10)
+
+        with col1:
+            if st.button("Request"):
+               st.session_state.page_history.append(st.session_state.page)
+               st.session_state.page = "Request"        
+        with col2:
+            if st.button("Response"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Response"
+
+        with col3:
+            if st.button("Demograph"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Demograph"
+        with col4:
+            if st.button("Analyze"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "analyze"
+        with col5:
+            if st.button("VeriCheck"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "VeriCheck"
+        with col6:
+            if st.button("AML"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "AML"
+        with col7:
+            if st.button("Fraud"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Fraud"
+        with col8:
+            if st.button("Raw"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Raw"
+        with col9:
+            if st.button("Aggregated"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Aggregated"
+        with col10:
+            if st.button("Summary"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Summary"
+
+    st.markdown('</div>', unsafe_allow_html=True)
+     
+                
+#Styling
+    st.markdown(
+        """
+        <style>
+         .reportview-container {
+                background-color: black;  
+                color: white;  
+                height: 5px;
+                width: 100%;
+                margin-bottom: 30px;
+            }
+            .logo-container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .dataframe {
+                margin-right: 500px;
+                margin-left:500px;
+            }
+       
+        .st-emotion-cache-13ln4jf {
+            max-width: 100% !important;  
+            width: 100% !important;      
+            padding: 4rem 4rem 10rem !important;
+        }
+        .css-1lcbmhc {
+            padding-left: 0 !important;  
+            padding-right: 0 !important; 
+        }
+        .st-emotion-cache-165ax5l {
+           width: 70% !important;
+           margin-bottom: 1rem;
+            color: rgb(49, 51, 63);
+            border-collapse: collapse;
+            border: 1px solid rgba(49, 51, 63, 0.1);
+            margin-left: 180px; !important;
+        }
+       .st-emotion-cache-a51556 {
+           border-bottom: 1px solid rgba(49, 51, 63, 0.1);
+           border-right: 1px solid rgba(49, 51, 63, 0.1);
+           vertical-align: middle;
+           padding: 0.25rem 0.375rem;
+           font-weight: 400;
+           color: rgba(49, 51, 63, 0.6);
+           display: none;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+#Arrangment of the information on the page
+    st.markdown(
+        """
+        <div class="reportview-container">
+           <div class="logo-container">
+        </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    st.title("Aggregated Data")
+    # Extract raw data using the existing function
+    raw_data, aggregated_data = extract_data_for_account_lxml(root)
+
+    # Convert raw data to a DataFrame for display
+    agg_df = pd.DataFrame(aggregated_data)
+    if not agg_df.empty:
+     st.table(agg_df)  # Display the raw data in a table format
+        
+         # Back button   
+    if st.button("Back"):
+         if len(st.session_state.page_history) > 0:
+            st.session_state.page = st.session_state.page_history.pop()  # Go back to the previous page
+         else:
+            st.error("No previous page to go back to.")
+
+#aggregated.py
+import streamlit as st
+import pandas as pd
+import plotly.express as px
+from lxml import etree
+
+# Load the XML file
+def load_xml(file):
+    try:
+        tree = etree.parse(file)
+        root = tree.getroot()
+        return root
+    except Exception as e:
+        st.error(f"Error loading XML file: {e}")
+        return None
+ 
+
+
+# Extract Provenir ID and Unique ID from XML file
+def extract_ids_from_xml(root):
+    header_segment = root.find(".//HeaderSegment")
+    if header_segment is not None:
+        provenir_id = header_segment.get("ProvenirID", "N/A")
+        unique_id = header_segment.get("UniqueID", "N/A")
+        return provenir_id, unique_id
+
+    return "N/A", "N/A"
+
+# #Extracting Of Raw And Aggregated data from Xml file
+def extract_data_for_account_lxml(element):
+    raw_data = []
+    aggregated_data = []
+
+    interface_aggregations = element.xpath(".//InterfaceAggregations")
+
+    for interface in interface_aggregations:
+        aggregation_locals = interface.xpath(".//AggregationLocal")
+        for agg_local in aggregation_locals:
+            raw_items = agg_local.xpath("./Raw")
+            for raw_item in raw_items:
+                name = raw_item.get("Name")
+                value = raw_item.get("Value")
+                raw_data.append({"Name": name, "Value": value})
+
+            aggregated_items = agg_local.xpath("./Aggregated")
+            for agg_item in aggregated_items:
+                name = agg_item.get("Name")
+                value = agg_item.get("Value")
+                description = agg_item.get("Description")
+
+                # Initialize category variable
+                category = ""
+
+                # Determine the category based on the name
+                if name.startswith("G1_"):
+                    category = "G1_Demographics"
+                elif name.startswith("G2_"):
+                    category = "G2_Age"
+                elif name.startswith("G3_"):
+                    category = "G3_Credit History"
+                elif name.startswith("G4_"):
+                    category = "G4_Employment"
+                elif name.startswith("G5_"):
+                    category = "G5_Financial Status"
+                elif name.startswith("G6_"):
+                    category = "G6_Inquiries"
+                elif name.startswith("G7_"):
+                    category = "G7_Public Records"
+                elif name.startswith("G8_"):
+                    category = "G8_Collections"
+                elif name.startswith("G9_"):
+                    category = "G9_Fraud"
+                elif name.startswith("G10_"):
+                    category = "G10_Account Details"
+                else:
+                    category = "Other"
+
+                # Append to aggregated_data as a row
+                aggregated_data.append([
+                    category,
+                    name,
+                    value,
+                    description,
+                ])
+
+    # Custom sorting order
+    custom_category_order = {
+        "G1_Demographics": 1,
+        "G2_Age": 2,
+        "G3_Credit History": 3,
+        "G4_Employment": 4,
+        "G5_Financial Status": 5,
+        "G6_Inquiries": 6,
+        "G7_Public Records": 7,
+        "G8_Collections": 8,
+        "G9_Fraud": 9,
+        "G10_Account Details": 10,
+        "Other": 11,
+    }
+
+    # Sort the aggregated data by category and then by Name
+    aggregated_data.sort(key=lambda x: (custom_category_order.get(x[0], 11), x[1]))
+
+    return raw_data, aggregated_data
+
+
+# Function to create aggregated page
+def aggregated_page():
+    #Styling
+     st.markdown(""" 
+        <style>
+            .st-emotion-cache-13ln4jf {
+                max-width: 100% !important;
+                width: 100% !important;
+                padding: 4rem 1rem 10rem; !important;
+            }
+            .dataframe {
+                margin-right: 100px;
+                margin-left: 100px;
+            }
+            .css-1lcbmhc {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+        /* Style for the Provenir ID and Reference# */
+        .top-info {
+            position: absolute; 
+            top: 10px; 
+            right: 10px; 
+            text-align: right; 
+            font-size: 12px;
+            font-family: Arial, sans-serif;
+            color: black;
+        }
+       
+        /* Align the text beside the logo */
+        .header-text {
+            display: inline-block;
+            vertical-align: middle;
+            font-family: Arial, sans-serif;
+            font-size: 20px;
+            font-weight: bold;
+            color: black;
+        }
+      .st-emotion-cache-1vt4y43 {
+    display: inline-flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    font-weight: 400;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.1rem;
+    /* min-height: 1.5rem; */
+    margin: 4px;
+    line-height: 1.3;
+    color: black;
+    width: 110px;
+    user-select: none;
+    background-color: rgb(240 240 240);
+    border: 1.5px solid rgb(0 0 0);
+}
+.st-emotion-cache-463q5x {
+    margin: 0px;
+    padding-right: 2.75rem;
+    color: rgb(49, 51, 63);
+    border-radius: 0.5rem;
+    background-color: white;
+}
+
+
+    @media (max-width: 1024px) {
+        .st-emotion-cache-1vt4y43 {
+            width: 100%;  /* Make the buttons take full width on smaller screens */
+            margin-bottom: 10px;  /* Add space between buttons */
+        }
+    }
+
+    @media (max-width: 768px) {
+        .st-emotion-cache-1vt4y43 {
+            font-size: 12px;  /* Reduce the font size for smaller screens */
+            padding: 0.2rem 0.6rem;  /* Reduce padding for better fit */
+        }
+        .st-emotion-cache-165ax5l {
+    width: 90% !important;
+    margin-bottom: 1rem;
+    color: rgb(49, 51, 63);
+    border-collapse: collapse;
+    border: 1px solid rgba(49, 51, 63, 0.1);
+    margin-left: 50px;
+}
+    }
+      @media (max-width: 620px){
+    .st-emotion-cache-165ax5l {
+    width: 50% !important;
+    margin-bottom: 1rem;
+    color: rgb(49, 51, 63);
+    border-collapse: collapse;
+    border: 1px solid rgba(49, 51, 63, 0.1);
+    margin-left: 20px;
+}
+}
+.navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: white; /* Change to match your app's theme */
+            z-index: 1000; /* Ensure it stays on top of other elements */
+            padding: 10px; /* Optional padding */
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Optional border */
+        }
+        /* Add spacing below header */
+        .header-section {
+            padding-bottom: 20px;
+        }
+
+        </style>
+    """, unsafe_allow_html=True)
+     
+     # Load the XML file for Provenir_id and Unique_id
+     file = './1_Account_035_Result.xml'
+     root = load_xml(file)
+
+     if root is None:
+        st.error("Failed to load XML file.")
+        return
+
+  
+     provenir_id, unique_id = extract_ids_from_xml(root)
+
+
+     st.markdown(f"""
+        <div class='top-info'>
+        <b>Provenir ID:</b> {provenir_id}<br>
+        <b>Unique ID:</b> {unique_id}
+        </div>
+    """, unsafe_allow_html=True)
+
+     st.image("logo.png", width=200) #logo Arrangment
+     st.markdown('<div class="navbar">', unsafe_allow_html=True)
+    # Navbar Buttons
+     if "page_history" not in st.session_state:
+        st.session_state.page_history = []
+
+    # Navbar Buttons
+     navbar = st.container()
+     with navbar:
+        col1, col2, col3, col4, col5, col6, col7, col8, col9, col10 = st.columns(10)
+
+        with col1:
+            if st.button("Request"):
+               st.session_state.page_history.append(st.session_state.page)
+               st.session_state.page = "Request"        
+        with col2:
+            if st.button("Response"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Response"
+
+        with col3:
+            if st.button("Demograph"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Demograph"
+        with col4:
+            if st.button("Analyze"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "analyze"
+        with col5:
+            if st.button("VeriCheck"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "VeriCheck"
+        with col6:
+            if st.button("AML"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "AML"
+        with col7:
+            if st.button("Fraud"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Fraud"
+        with col8:
+            if st.button("Raw"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Raw"
+        with col9:
+            if st.button("Aggregated"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Aggregated"
+        with col10:
+            if st.button("Summary"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Summary"
+
+     st.markdown('</div>', unsafe_allow_html=True)
+     
+     
+     st.markdown(
+        """
+        <style>
+         .reportview-container {
+                background-color: black;  
+                color: white;  
+                height: 5px;
+                width: 100%;
+                margin-bottom: 30px;
+            }
+            .logo-container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        .st-emotion-cache-13ln4jf {
+            max-width: 100% !important;  
+            width: 100% !important;      
+            padding: 4rem 4rem 10rem !important;
+        }
+        .css-1lcbmhc {
+            padding-left: 0 !important;  
+            padding-right: 0 !important; 
+        }
+        .st-emotion-cache-165ax5l {
+           width: 70% !important;
+           margin-bottom: 1rem;
+            color: rgb(49, 51, 63);
+            border-collapse: collapse;
+            border: 1px solid rgba(49, 51, 63, 0.1);
+            margin-left: 180px; !important;
+        }
+       .st-emotion-cache-a51556 {
+           border-bottom: 1px solid rgba(49, 51, 63, 0.1);
+           border-right: 1px solid rgba(49, 51, 63, 0.1);
+           vertical-align: middle;
+           padding: 0.25rem 0.375rem;
+           font-weight: 400;
+           color: rgba(49, 51, 63, 0.6);
+           display: none;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+     #Arrangment of the information on the page
+     st.markdown(
+        """
+        <div class="reportview-container">
+           <div class="logo-container">
+        </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+     st.title("Aggregated Data")
+  # Extract raw data using the existing function
+     raw_data, aggregated_data = extract_data_for_account_lxml(root)
+         # Convert raw data to a DataFrame for display
+     agg_df = pd.DataFrame(aggregated_data)
+     if not agg_df.empty:
+            st.table(agg_df) # Display the raw data in a table format
+     else:
+            st.write("No Aggregated Data Found.")
+      # Back button   
+     if st.button("Back"):
+         if len(st.session_state.page_history) > 0:
+            st.session_state.page = st.session_state.page_history.pop()  # Go back to the previous page
+         else:
+            st.error("No previous page to go back to.")
+
+#output.py
+import streamlit as st
+import pandas as pd
+import requests
+from lxml import etree
+
+def display_output():
+    st.image("logo.png", width=200)  # Logo Arrangement
+
+    # Arrangement of the information on the page
+    st.markdown(
+        """
+        <div class="reportview-container">
+           <div class="logo-container"></div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    # Styling
+    st.markdown(
+        """
+        <style>
+            .st-emotion-cache-13ln4jf {
+                max-width: 100% !important;  
+                width: 100% !important;      
+                padding: 4rem 1rem 10rem !important;
+            }
+            .stApp {
+                margin-left: 0rem;
+            }
+            .centered-title {
+                text-align: center;  
+                font-size: 40px;     
+                font-weight: bold;   
+                color: black;        
+            }
+            .reportview-container {
+                background-color: black;  
+                color: white;  
+                height: 10px;
+                width: 100%;
+                margin-bottom: 30px;
+            }
+            .logo-container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            # .dataframe {
+            #     margin-right: 100px;
+            #     margin-left: 25px;
+            # }
+            .css-1lcbmhc {
+                padding-left: 0 !important;  
+                padding-right: 0 !important; 
+            }
+            .back-button {
+                margin-left: 20%;  
+            }
+            .stButton {
+                margin-left: 10px;  /* Adjust margin for better alignment */
+            }
+            .st-emotion-cache-1vt4y43 {
+                display: inline-flex;
+                -webkit-box-align: center;
+                align-items: center;
+                -webkit-box-pack: center;
+                justify-content: center;
+                font-weight: 400;
+                padding: 0.25rem 0.75rem;
+                min-height: 2.5rem;
+                margin: 0px;
+                line-height: 1.6;
+                color: black;
+                width: auto;
+                user-select: none;
+                border: 1px solid rgba(49, 51, 63, 0.2);
+                margin-left: 100px;
+            }
+            .st-emotion-cache-ocqkz7 {
+             display: flex;
+             flex-wrap: wrap;
+             -webkit-box-flex: 1;
+             flex-grow: 1;
+            -webkit-box-align: stretch;
+            align-items: stretch;
+            gap: 1rem;
+            margin-left: 150px;
+            }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+    if 'form_data' in st.session_state:
+        form_data = st.session_state.form_data
+
+    # Create a list to hold all rows of form data (3 rows for each bureau)
+        data_rows = [form_data.copy() for _ in range(3)]  # Create 3 copies of form_data
+
+    # Generate output in Table format without the "Credit Bureaus" column
+        data = pd.DataFrame(data_rows)
+
+        # Display the table
+        st.markdown(
+            """
+            <style>
+                .dataframe {
+                    border: 1px solid #ddd;
+                    padding: 8px;
+                    text-align: left;
+                    border-collapse: collapse;
+                    width: 85%;
+                    margin-left: 100px;
+                }
+                .dataframe th, .dataframe td {
+                    padding: 8px;
+                    border-bottom: 1px solid #ddd;
+                }
+                .dataframe tr:hover {
+                    background-color: #f5f5f5;
+                }
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
+        st.markdown(data.to_html(escape=False, index=False), unsafe_allow_html=True)
+
+        # Display buttons in a horizontal line below the table
+        col1, col2, col3 = st.columns([1, 1, 1])  # Create 3 equal-width columns
+
+        with col1:
+            if st.button("Equifax"):
+                st.session_state.page = "equifax"  # Navigate to Equifax page
+                st.rerun()
+        
+        with col2:
+            if st.button("Experian"):
+                st.session_state.page = "experian"  # Navigate to Experian page
+                st.rerun()
+        
+        with col3:
+            if st.button("Illion"):
+                st.session_state.page = "illion"  # Navigate to Illion page
+                st.rerun()
+
+        # Return Button to go back
+        if st.button("Return"):
+            if 'form_data' in st.session_state:
+                del st.session_state.form_data
+            st.session_state.page = "form"
+
+#aml.py
+import streamlit as st
+from lxml import etree
+
+# Load the XML file
+def load_xml(file):
+    try:
+        tree = etree.parse(file)
+        root = tree.getroot()
+        return root
+    except Exception as e:
+        st.error(f"Error loading XML file: {e}")
+        return None
+    
+
+
+# Extract Provenir ID and Unique ID from XML file
+def extract_ids_from_xml(root):
+    header_segment = root.find(".//HeaderSegment")
+    if header_segment is not None:
+        provenir_id = header_segment.get("ProvenirID", "N/A")
+        unique_id = header_segment.get("UniqueID", "N/A")
+        return provenir_id, unique_id
+
+    return "N/A", "N/A"
+
+        
+# Function to create Aml page
+def  aml_page():
+    #Styling
+     st.markdown(""" 
+        <style>
+            .st-emotion-cache-13ln4jf {
+                max-width: 100% !important;
+                width: 100% !important;
+                padding: 4rem 1rem 10rem; !important;
+            }
+            .dataframe {
+                margin-right: 100px;
+                margin-left: 100px;
+            }
+            .css-1lcbmhc {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+        /* Style for the Provenir ID and Reference# */
+        .top-info {
+            position: absolute; 
+            top: 10px; 
+            right: 10px; 
+            text-align: right; 
+            font-size: 12px;
+            font-family: Arial, sans-serif;
+            color: black;
+        }
+       
+        /* Align the text beside the logo */
+        .header-text {
+            display: inline-block;
+            vertical-align: middle;
+            font-family: Arial, sans-serif;
+            font-size: 20px;
+            font-weight: bold;
+            color: black;
+        }
+      .st-emotion-cache-1vt4y43 {
+    display: inline-flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    font-weight: 400;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.1rem;
+    /* min-height: 1.5rem; */
+    margin: 20px;
+    line-height: 1.3;
+    color: black;
+    width: 110px;
+    user-select: none;
+    background-color: rgb(240 240 240);
+    border: 1.5px solid rgb(0 0 0);
+}
+.st-emotion-cache-463q5x {
+    margin: 0px;
+    padding-right: 2.75rem;
+    color: rgb(49, 51, 63);
+    border-radius: 0.5rem;
+    background-color: white;
+}
+
+
+    @media (max-width: 1024px) {
+        .st-emotion-cache-1vt4y43 {
+            width: 100%;  /* Make the buttons take full width on smaller screens */
+            margin-bottom: 10px;  /* Add space between buttons */
+        }
+    }
+
+    @media (max-width: 768px) {
+        .st-emotion-cache-1vt4y43 {
+            font-size: 12px;  /* Reduce the font size for smaller screens */
+            padding: 0.2rem 0.6rem;  /* Reduce padding for better fit */
+        }
+        .st-emotion-cache-165ax5l {
+    width: 90% !important;
+    margin-bottom: 1rem;
+    color: rgb(49, 51, 63);
+    border-collapse: collapse;
+    border: 1px solid rgba(49, 51, 63, 0.1);
+    margin-left: 50px;
+}
+    }
+      @media (max-width: 620px){
+    .st-emotion-cache-165ax5l {
+    width: 50% !important;
+    margin-bottom: 1rem;
+    color: rgb(49, 51, 63);
+    border-collapse: collapse;
+    border: 1px solid rgba(49, 51, 63, 0.1);
+    margin-left: 20px;
+}
+}
+.navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: white; /* Change to match your app's theme */
+            z-index: 1000; /* Ensure it stays on top of other elements */
+            padding: 10px; /* Optional padding */
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Optional border */
+        }
+        /* Add spacing below header */
+        .header-section {
+            padding-bottom: 20px;
+        }
+
+        </style>
+    """, unsafe_allow_html=True)
+     
+     # Load the XML file for Provenir_id and Unique_id
+     file = './1_Account_035_Result.xml'
+     root = load_xml(file)
+
+     if root is None:
+        st.error("Failed to load XML file.")
+        return
+
+  
+     provenir_id, unique_id = extract_ids_from_xml(root)
+
+
+     st.markdown(f"""
+        <div class='top-info'>
+        <b>Provenir ID:</b> {provenir_id}<br>
+        <b>Unique ID:</b> {unique_id}
+        </div>
+    """, unsafe_allow_html=True)
+
+     st.image("logo.png", width=200) #logo Arrangment
+     st.markdown('<div class="navbar">', unsafe_allow_html=True)
+    # Navbar Buttons
+     if "page_history" not in st.session_state:
+        st.session_state.page_history = []
+
+    # Navbar Buttons
+     navbar = st.container()
+     with navbar:
+        col1, col2, col3, col4, col5, col6, col7, col8, col9, col10 = st.columns(10)
+
+        with col1:
+            if st.button("Request"):
+               st.session_state.page_history.append(st.session_state.page)
+               st.session_state.page = "Request"        
+        with col2:
+            if st.button("Response"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Response"
+
+        with col3:
+            if st.button("Demograph"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Demograph"
+        with col4:
+            if st.button("Analyze"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "analyze"
+        with col5:
+            if st.button("VeriCheck"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "VeriCheck"
+        with col6:
+            if st.button("AML"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "AML"
+        with col7:
+            if st.button("Fraud"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Fraud"
+        with col8:
+            if st.button("Raw"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Raw"
+        with col9:
+            if st.button("Aggregated"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Aggregated"
+        with col10:
+            if st.button("Summary"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Summary"
+
+     st.markdown('</div>', unsafe_allow_html=True)
+     
+     st.markdown(
+        """
+        <style>
+         .reportview-container {
+                background-color: black;  
+                color: white;  
+                height: 5px;
+                width: 100%;
+                margin-bottom: 30px;
+            }
+            .logo-container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        .st-emotion-cache-13ln4jf {
+            max-width: 100% !important;  
+            width: 100% !important;      
+            padding: 4rem 4rem 10rem !important;
+        }
+        .css-1lcbmhc {
+            padding-left: 0 !important;  
+            padding-right: 0 !important; 
+        }
+        .st-emotion-cache-165ax5l {
+           width: 70% !important;
+           margin-bottom: 1rem;
+            color: rgb(49, 51, 63);
+            border-collapse: collapse;
+            border: 1px solid rgba(49, 51, 63, 0.1);
+            margin-left: 180px; !important;
+        }
+       .st-emotion-cache-a51556 {
+           border-bottom: 1px solid rgba(49, 51, 63, 0.1);
+           border-right: 1px solid rgba(49, 51, 63, 0.1);
+           vertical-align: middle;
+           padding: 0.25rem 0.375rem;
+           font-weight: 400;
+           color: rgba(49, 51, 63, 0.6);
+           display: none;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+     #Arrangment of the information on the page
+     st.markdown(
+        """
+        <div class="reportview-container">
+           <div class="logo-container">
+        </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+     
+     st.write("AML")
+     
+      # Back button   
+     if st.button("Back"):
+         if len(st.session_state.page_history) > 0:
+            st.session_state.page = st.session_state.page_history.pop()  # Go back to the previous page
+         else:
+            st.error("No previous page to go back to.")
+      
+
+#demograph.py
+import streamlit as st
+from lxml import etree
+
+# Load the XML file
+def load_xml(file):
+    try:
+        tree = etree.parse(file)
+        root = tree.getroot()
+        return root
+    except Exception as e:
+        st.error(f"Error loading XML file: {e}")
+        return None
+    
+
+
+# Extract Provenir ID and Unique ID from XML file
+def extract_ids_from_xml(root):
+    header_segment = root.find(".//HeaderSegment")
+    if header_segment is not None:
+        provenir_id = header_segment.get("ProvenirID", "N/A")
+        unique_id = header_segment.get("UniqueID", "N/A")
+        return provenir_id, unique_id
+
+    return "N/A", "N/A"
+
+        
+# Function to create demograph page
+def demograph_page():
+    #Styling
+     st.markdown(""" 
+        <style>
+            .st-emotion-cache-13ln4jf {
+                max-width: 100% !important;
+                width: 100% !important;
+                padding: 4rem 1rem 10rem; !important;
+            }
+            .dataframe {
+                margin-right: 100px;
+                margin-left: 100px;
+            }
+            .css-1lcbmhc {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+        /* Style for the Provenir ID and Reference# */
+        .top-info {
+            position: absolute; 
+            top: 10px; 
+            right: 10px; 
+            text-align: right; 
+            font-size: 12px;
+            font-family: Arial, sans-serif;
+            color: black;
+        }
+       
+        /* Align the text beside the logo */
+        .header-text {
+            display: inline-block;
+            vertical-align: middle;
+            font-family: Arial, sans-serif;
+            font-size: 20px;
+            font-weight: bold;
+            color: black;
+        }
+      .st-emotion-cache-1vt4y43 {
+    display: inline-flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    font-weight: 400;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.1rem;
+    /* min-height: 1.5rem; */
+    margin: 20px;
+    line-height: 1.3;
+    color: black;
+    width: 110px;
+    user-select: none;
+    background-color: rgb(240 240 240);
+    border: 1.5px solid rgb(0 0 0);
+}
+.st-emotion-cache-463q5x {
+    margin: 0px;
+    padding-right: 2.75rem;
+    color: rgb(49, 51, 63);
+    border-radius: 0.5rem;
+    background-color: white;
+}
+
+
+    @media (max-width: 1024px) {
+        .st-emotion-cache-1vt4y43 {
+            width: 100%;  /* Make the buttons take full width on smaller screens */
+            margin-bottom: 10px;  /* Add space between buttons */
+        }
+    }
+
+    @media (max-width: 768px) {
+        .st-emotion-cache-1vt4y43 {
+            font-size: 12px;  /* Reduce the font size for smaller screens */
+            padding: 0.2rem 0.6rem;  /* Reduce padding for better fit */
+        }
+        .st-emotion-cache-165ax5l {
+    width: 90% !important;
+    margin-bottom: 1rem;
+    color: rgb(49, 51, 63);
+    border-collapse: collapse;
+    border: 1px solid rgba(49, 51, 63, 0.1);
+    margin-left: 50px;
+}
+    }
+      @media (max-width: 620px){
+    .st-emotion-cache-165ax5l {
+    width: 50% !important;
+    margin-bottom: 1rem;
+    color: rgb(49, 51, 63);
+    border-collapse: collapse;
+    border: 1px solid rgba(49, 51, 63, 0.1);
+    margin-left: 20px;
+}
+}
+.navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: white; /* Change to match your app's theme */
+            z-index: 1000; /* Ensure it stays on top of other elements */
+            padding: 10px; /* Optional padding */
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Optional border */
+        }
+        /* Add spacing below header */
+        .header-section {
+            padding-bottom: 20px;
+        }
+
+        </style>
+    """, unsafe_allow_html=True)
+     
+     # Load the XML file for Provenir_id and Unique_id
+     file = './1_Account_035_Result.xml'
+     root = load_xml(file)
+
+     if root is None:
+        st.error("Failed to load XML file.")
+        return
+
+  
+     provenir_id, unique_id = extract_ids_from_xml(root)
+
+
+     st.markdown(f"""
+        <div class='top-info'>
+        <b>Provenir ID:</b> {provenir_id}<br>
+        <b>Unique ID:</b> {unique_id}
+        </div>
+    """, unsafe_allow_html=True)
+
+     st.image("logo.png", width=200) #logo Arrangment
+     st.markdown('<div class="navbar">', unsafe_allow_html=True)
+    # Navbar Buttons
+     if "page_history" not in st.session_state:
+        st.session_state.page_history = []
+
+    # Navbar Buttons
+     navbar = st.container()
+     with navbar:
+        col1, col2, col3, col4, col5, col6, col7, col8, col9, col10 = st.columns(10)
+
+        with col1:
+            if st.button("Request"):
+               st.session_state.page_history.append(st.session_state.page)
+               st.session_state.page = "Request"        
+        with col2:
+            if st.button("Response"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Response"
+
+        with col3:
+            if st.button("Demograph"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Demograph"
+        with col4:
+            if st.button("Analyze"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "analyze"
+        with col5:
+            if st.button("VeriCheck"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "VeriCheck"
+        with col6:
+            if st.button("AML"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "AML"
+        with col7:
+            if st.button("Fraud"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Fraud"
+        with col8:
+            if st.button("Raw"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Raw"
+        with col9:
+            if st.button("Aggregated"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Aggregated"
+        with col10:
+            if st.button("Summary"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Summary"
+
+     st.markdown('</div>', unsafe_allow_html=True)
+     
+     st.markdown(
+        """
+        <style>
+         .reportview-container {
+                background-color: black;  
+                color: white;  
+                height: 5px;
+                width: 100%;
+                margin-bottom: 30px;
+            }
+            .logo-container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        .st-emotion-cache-13ln4jf {
+            max-width: 100% !important;  
+            width: 100% !important;      
+            padding: 4rem 4rem 10rem !important;
+        }
+        .css-1lcbmhc {
+            padding-left: 0 !important;  
+            padding-right: 0 !important; 
+        }
+        .st-emotion-cache-165ax5l {
+           width: 70% !important;
+           margin-bottom: 1rem;
+            color: rgb(49, 51, 63);
+            border-collapse: collapse;
+            border: 1px solid rgba(49, 51, 63, 0.1);
+            margin-left: 180px; !important;
+        }
+       .st-emotion-cache-a51556 {
+           border-bottom: 1px solid rgba(49, 51, 63, 0.1);
+           border-right: 1px solid rgba(49, 51, 63, 0.1);
+           vertical-align: middle;
+           padding: 0.25rem 0.375rem;
+           font-weight: 400;
+           color: rgba(49, 51, 63, 0.6);
+           display: none;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+     #Arrangment of the information on the page
+     st.markdown(
+        """
+        <div class="reportview-container">
+           <div class="logo-container">
+        </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+     
+     st.write("Demograph")
+     
+      # Back button   
+     if st.button("Back"):
+         if len(st.session_state.page_history) > 0:
+            st.session_state.page = st.session_state.page_history.pop()  # Go back to the previous page
+         else:
+            st.error("No previous page to go back to.")
+     #fraud.py
+   import streamlit as st
+from lxml import etree
+
+# Load the XML file
+def load_xml(file):
+    try:
+        tree = etree.parse(file)
+        root = tree.getroot()
+        return root
+    except Exception as e:
+        st.error(f"Error loading XML file: {e}")
+        return None
+    
+
+
+# Extract Provenir ID and Unique ID from XML file
+def extract_ids_from_xml(root):
+    header_segment = root.find(".//HeaderSegment")
+    if header_segment is not None:
+        provenir_id = header_segment.get("ProvenirID", "N/A")
+        unique_id = header_segment.get("UniqueID", "N/A")
+        return provenir_id, unique_id
+
+    return "N/A", "N/A"
+
+        
+# Function to create fraud page
+def fraud_page():
+    #Styling
+     st.markdown(""" 
+        <style>
+            .st-emotion-cache-13ln4jf {
+                max-width: 100% !important;
+                width: 100% !important;
+                padding: 4rem 1rem 10rem; !important;
+            }
+            .dataframe {
+                margin-right: 100px;
+                margin-left: 100px;
+            }
+            .css-1lcbmhc {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+        /* Style for the Provenir ID and Reference# */
+        .top-info {
+            position: absolute; 
+            top: 10px; 
+            right: 10px; 
+            text-align: right; 
+            font-size: 12px;
+            font-family: Arial, sans-serif;
+            color: black;
+        }
+       
+        /* Align the text beside the logo */
+        .header-text {
+            display: inline-block;
+            vertical-align: middle;
+            font-family: Arial, sans-serif;
+            font-size: 20px;
+            font-weight: bold;
+            color: black;
+        }
+      .st-emotion-cache-1vt4y43 {
+    display: inline-flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    font-weight: 400;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.1rem;
+    /* min-height: 1.5rem; */
+    margin: 20px;
+    line-height: 1.3;
+    color: black;
+    width: 110px;
+    user-select: none;
+    background-color: rgb(240 240 240);
+    border: 1.5px solid rgb(0 0 0);
+}
+.st-emotion-cache-463q5x {
+    margin: 0px;
+    padding-right: 2.75rem;
+    color: rgb(49, 51, 63);
+    border-radius: 0.5rem;
+    background-color: white;
+}
+
+
+    @media (max-width: 1024px) {
+        .st-emotion-cache-1vt4y43 {
+            width: 100%;  /* Make the buttons take full width on smaller screens */
+            margin-bottom: 10px;  /* Add space between buttons */
+        }
+    }
+
+    @media (max-width: 768px) {
+        .st-emotion-cache-1vt4y43 {
+            font-size: 12px;  /* Reduce the font size for smaller screens */
+            padding: 0.2rem 0.6rem;  /* Reduce padding for better fit */
+        }
+        .st-emotion-cache-165ax5l {
+    width: 90% !important;
+    margin-bottom: 1rem;
+    color: rgb(49, 51, 63);
+    border-collapse: collapse;
+    border: 1px solid rgba(49, 51, 63, 0.1);
+    margin-left: 50px;
+}
+    }
+      @media (max-width: 620px){
+    .st-emotion-cache-165ax5l {
+    width: 50% !important;
+    margin-bottom: 1rem;
+    color: rgb(49, 51, 63);
+    border-collapse: collapse;
+    border: 1px solid rgba(49, 51, 63, 0.1);
+    margin-left: 20px;
+}
+}
+.navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: white; /* Change to match your app's theme */
+            z-index: 1000; /* Ensure it stays on top of other elements */
+            padding: 10px; /* Optional padding */
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Optional border */
+        }
+        /* Add spacing below header */
+        .header-section {
+            padding-bottom: 20px;
+        }
+
+        </style>
+    """, unsafe_allow_html=True)
+     
+     # Load the XML file for Provenir_id and Unique_id
+     file = './1_Account_035_Result.xml'
+     root = load_xml(file)
+
+     if root is None:
+        st.error("Failed to load XML file.")
+        return
+
+  
+     provenir_id, unique_id = extract_ids_from_xml(root)
+
+
+     st.markdown(f"""
+        <div class='top-info'>
+        <b>Provenir ID:</b> {provenir_id}<br>
+        <b>Unique ID:</b> {unique_id}
+        </div>
+    """, unsafe_allow_html=True)
+
+     st.image("logo.png", width=200) #logo Arrangment
+     st.markdown('<div class="navbar">', unsafe_allow_html=True)
+    # Navbar Buttons
+     if "page_history" not in st.session_state:
+        st.session_state.page_history = []
+
+    # Navbar Buttons
+     navbar = st.container()
+     with navbar:
+        col1, col2, col3, col4, col5, col6, col7, col8, col9, col10 = st.columns(10)
+
+        with col1:
+            if st.button("Request"):
+               st.session_state.page_history.append(st.session_state.page)
+               st.session_state.page = "Request"        
+        with col2:
+            if st.button("Response"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Response"
+
+        with col3:
+            if st.button("Demograph"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Demograph"
+        with col4:
+            if st.button("Analyze"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "analyze"
+        with col5:
+            if st.button("VeriCheck"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "VeriCheck"
+        with col6:
+            if st.button("AML"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "AML"
+        with col7:
+            if st.button("Fraud"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Fraud"
+        with col8:
+            if st.button("Raw"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Raw"
+        with col9:
+            if st.button("Aggregated"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Aggregated"
+        with col10:
+            if st.button("Summary"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Summary"
+
+     st.markdown('</div>', unsafe_allow_html=True)
+     
+     st.markdown(
+        """
+        <style>
+         .reportview-container {
+                background-color: black;  
+                color: white;  
+                height: 5px;
+                width: 100%;
+                margin-bottom: 30px;
+            }
+            .logo-container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        .st-emotion-cache-13ln4jf {
+            max-width: 100% !important;  
+            width: 100% !important;      
+            padding: 4rem 4rem 10rem !important;
+        }
+        .css-1lcbmhc {
+            padding-left: 0 !important;  
+            padding-right: 0 !important; 
+        }
+        .st-emotion-cache-165ax5l {
+           width: 70% !important;
+           margin-bottom: 1rem;
+            color: rgb(49, 51, 63);
+            border-collapse: collapse;
+            border: 1px solid rgba(49, 51, 63, 0.1);
+            margin-left: 180px; !important;
+        }
+       .st-emotion-cache-a51556 {
+           border-bottom: 1px solid rgba(49, 51, 63, 0.1);
+           border-right: 1px solid rgba(49, 51, 63, 0.1);
+           vertical-align: middle;
+           padding: 0.25rem 0.375rem;
+           font-weight: 400;
+           color: rgba(49, 51, 63, 0.6);
+           display: none;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+     #Arrangment of the information on the page
+     st.markdown(
+        """
+        <div class="reportview-container">
+           <div class="logo-container">
+        </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+     
+     st.write("fraud")
+     
+      # Back button   
+     if st.button("Back"):
+         if len(st.session_state.page_history) > 0:
+            st.session_state.page = st.session_state.page_history.pop()  # Go back to the previous page
+         else:
+            st.error("No previous page to go back to.")
+     #illion.py
+import streamlit as st
+import pandas as pd
+import plotly.express as px
+from lxml import etree
+
+
+# Load the XML file
+def load_xml(file):
+    try:
+        tree = etree.parse(file)
+        root = tree.getroot()
+        return root
+    except Exception as e:
+        st.error(f"Error loading XML file: {e}")
+        return None
+
+# #Extracting Of Raw And Aggregated data from Xml file
+def extract_data_for_account_lxml(element):
+    raw_data = []
+    aggregated_data = []
+
+    interface_aggregations = element.xpath(".//InterfaceAggregations")
+
+    for interface in interface_aggregations:
+        aggregation_locals = interface.xpath(".//AggregationLocal")
+        for agg_local in aggregation_locals:
+            raw_items = agg_local.xpath("./Raw")
+            for raw_item in raw_items:
+                name = raw_item.get("Name")
+                value = raw_item.get("Value")
+                raw_data.append({"Name": name, "Value": value})
+
+            aggregated_items = agg_local.xpath("./Aggregated")
+            for agg_item in aggregated_items:
+                name = agg_item.get("Name")
+                value = agg_item.get("Value")
+                description = agg_item.get("Description")
+
+                # Initialize category variable
+                category = ""
+
+                # Determine the category based on the name
+                if name.startswith("G1_"):
+                    category = "G1_Demographics"
+                elif name.startswith("G2_"):
+                    category = "G2_Age"
+                elif name.startswith("G3_"):
+                    category = "G3_Credit History"
+                elif name.startswith("G4_"):
+                    category = "G4_Employment"
+                elif name.startswith("G5_"):
+                    category = "G5_Financial Status"
+                elif name.startswith("G6_"):
+                    category = "G6_Inquiries"
+                elif name.startswith("G7_"):
+                    category = "G7_Public Records"
+                elif name.startswith("G8_"):
+                    category = "G8_Collections"
+                elif name.startswith("G9_"):
+                    category = "G9_Fraud"
+                elif name.startswith("G10_"):
+                    category = "G10_Account Details"
+                else:
+                    category = "Other"
+
+                # Append to aggregated_data as a row
+                aggregated_data.append([
+                    category,
+                    name,
+                    value,
+                    description,
+                ])
+
+    # Custom sorting order
+    custom_category_order = {
+        "G1_Demographics": 1,
+        "G2_Age": 2,
+        "G3_Credit History": 3,
+        "G4_Employment": 4,
+        "G5_Financial Status": 5,
+        "G6_Inquiries": 6,
+        "G7_Public Records": 7,
+        "G8_Collections": 8,
+        "G9_Fraud": 9,
+        "G10_Account Details": 10,
+        "Other": 11,
+    }
+
+    # Sort the aggregated data by category and then by Name
+    aggregated_data.sort(key=lambda x: (custom_category_order.get(x[0], 11), x[1]))
+
+    return raw_data, aggregated_data
+
+def display_data(aggregated_data):
+    current_category = None
+    for entry in aggregated_data:
+        category = entry["Category"]
+        
+        # Only print the category header if it's different from the last printed category
+        if category != current_category:
+            if current_category is not None:
+                print()  # Add a blank line before the next category
+            print(category)  # Print category header
+            current_category = category
+            
+        # Print data entries with specific formatting
+        print(f"{entry['Name']}\t{entry['Value']}\t{entry['Description']}")  # Print data entries
+
+
+# Extract Provenir ID and Unique ID from XML file
+def extract_ids_from_xml(root):
+    header_segment = root.find(".//HeaderSegment")
+    if header_segment is not None:
+        provenir_id = header_segment.get("ProvenirID", "N/A")
+        unique_id = header_segment.get("UniqueID", "N/A")
+        return provenir_id, unique_id
+
+    return "N/A", "N/A"
+
+
+# Main function illion
+def illion_page():
+    
+ #Styling
+    st.markdown(""" 
+        <style>
+        /* Style for the Provenir ID and Reference# */
+        .top-info {
+            position: absolute; 
+            top: 10px; 
+            right: 10px; 
+            text-align: right; 
+            font-size: 12px;
+            font-family: Arial, sans-serif;
+            color: black;
+        }
+       
+        /* Align the text beside the logo */
+        .header-text {
+            display: inline-block;
+            vertical-align: middle;
+            font-family: Arial, sans-serif;
+            font-size: 20px;
+            font-weight: bold;
+            color: black;
+        }
+      .st-emotion-cache-1vt4y43 {
+    display: inline-flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    font-weight: 400;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.1rem;
+    /* min-height: 1.5rem; */
+    margin: 4px;
+    line-height: 1.3;
+    color: black;
+    width: 110px;
+    user-select: none;
+    background-color: rgb(240 240 240);
+    border: 1.5px solid rgb(0 0 0);
+}
+.st-emotion-cache-463q5x {
+    margin: 0px;
+    padding-right: 2.75rem;
+    color: rgb(49, 51, 63);
+    border-radius: 0.5rem;
+    background-color: white;
+}
+
+
+    @media (max-width: 1024px) {
+        .st-emotion-cache-1vt4y43 {
+            width: 100%;  /* Make the buttons take full width on smaller screens */
+            margin-bottom: 10px;  /* Add space between buttons */
+        }
+    }
+
+    @media (max-width: 768px) {
+        .st-emotion-cache-1vt4y43 {
+            font-size: 12px;  /* Reduce the font size for smaller screens */
+            padding: 0.2rem 0.6rem;  /* Reduce padding for better fit */
+        }
+        .st-emotion-cache-165ax5l {
+    width: 90% !important;
+    margin-bottom: 1rem;
+    color: rgb(49, 51, 63);
+    border-collapse: collapse;
+    border: 1px solid rgba(49, 51, 63, 0.1);
+    margin-left: 50px;
+}
+    }
+      @media (max-width: 620px){
+    .st-emotion-cache-165ax5l {
+    width: 50% !important;
+    margin-bottom: 1rem;
+    color: rgb(49, 51, 63);
+    border-collapse: collapse;
+    border: 1px solid rgba(49, 51, 63, 0.1);
+    margin-left: 20px;
+}
+}
+.navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: white; /* Change to match your app's theme */
+            z-index: 1000; /* Ensure it stays on top of other elements */
+            padding: 10px; /* Optional padding */
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Optional border */
+        }
+        /* Add spacing below header */
+        .header-section {
+            padding-bottom: 20px;
+        }
+
+        </style>
+    """, unsafe_allow_html=True)
+
+    # Load the XML file for Provenir_id and Unique_id
+    file = './1_Account_035_Result.xml'
+    root = load_xml(file)
+
+    if root is None:
+        st.error("Failed to load XML file.")
+        return
+
+  
+    provenir_id, unique_id = extract_ids_from_xml(root)
+
+
+    st.markdown(f"""
+        <div class='top-info'>
+        <b>Provenir ID:</b> {provenir_id}<br>
+        <b>Unique ID:</b> {unique_id}
+        </div>
+    """, unsafe_allow_html=True)
+
+    st.image("logo.png", width=200) #logo Arrangment
+    
+    st.markdown('<div class="navbar">', unsafe_allow_html=True)
+    # Navbar Buttons
+    if "page_history" not in st.session_state:
+        st.session_state.page_history = []
+
+    # Navbar Buttons
+    navbar = st.container()
+    with navbar:
+        col1, col2, col3, col4, col5, col6, col7, col8, col9, col10 = st.columns(10)
+
+        with col1:
+            if st.button("Request"):
+               st.session_state.page_history.append(st.session_state.page)
+               st.session_state.page = "Request"        
+        with col2:
+            if st.button("Response"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Response"
+
+        with col3:
+            if st.button("Demograph"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Demograph"
+        with col4:
+            if st.button("Analyze"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "analyze"
+        with col5:
+            if st.button("VeriCheck"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "VeriCheck"
+        with col6:
+            if st.button("AML"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "AML"
+        with col7:
+            if st.button("Fraud"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Fraud"
+        with col8:
+            if st.button("Raw"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Raw"
+        with col9:
+            if st.button("Aggregated"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Aggregated"
+        with col10:
+            if st.button("Summary"):
+                st.session_state.page_history.append(st.session_state.page)
+                st.session_state.page = "Summary"
+
+    st.markdown('</div>', unsafe_allow_html=True)
+     
+                
+#Styling
+    st.markdown(
+        """
+        <style>
+         .reportview-container {
+                background-color: black;  
+                color: white;  
+                height: 5px;
+                width: 100%;
+                margin-bottom: 30px;
+            }
+            .logo-container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .dataframe {
+                margin-right: 500px;
+                margin-left:500px;
+            }
+       
+        .st-emotion-cache-13ln4jf {
+            max-width: 100% !important;  
+            width: 100% !important;      
+            padding: 4rem 4rem 10rem !important;
+        }
+        .css-1lcbmhc {
+            padding-left: 0 !important;  
+            padding-right: 0 !important; 
+        }
+        .st-emotion-cache-165ax5l {
+           width: 70% !important;
+           margin-bottom: 1rem;
+            color: rgb(49, 51, 63);
+            border-collapse: collapse;
+            border: 1px solid rgba(49, 51, 63, 0.1);
+            margin-left: 180px; !important;
+        }
+       .st-emotion-cache-a51556 {
+           border-bottom: 1px solid rgba(49, 51, 63, 0.1);
+           border-right: 1px solid rgba(49, 51, 63, 0.1);
+           vertical-align: middle;
+           padding: 0.25rem 0.375rem;
+           font-weight: 400;
+           color: rgba(49, 51, 63, 0.6);
+           display: none;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+#Arrangment of the information on the page
+    st.markdown(
+        """
+        <div class="reportview-container">
+           <div class="logo-container">
+        </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    st.title("Aggregated Data")
+    # Extract raw data using the existing function
+    raw_data, aggregated_data = extract_data_for_account_lxml(root)
+
+    # Convert raw data to a DataFrame for display
+    agg_df = pd.DataFrame(aggregated_data)
+    if not agg_df.empty:
+     st.table(agg_df)  # Display the raw data in a table format
+        
+         # Back button   
+    if st.button("Back"):
+         if len(st.session_state.page_history) > 0:
+            st.session_state.page = st.session_state.page_history.pop()  # Go back to the previous page
+         else:
+            st.error("No previous page to go back to.")
+
+
+
+
+
+
