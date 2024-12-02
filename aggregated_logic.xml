@@ -1,0 +1,11 @@
+<Response>
+            <getProduct_4_0Response>
+              <responseInfo_4_0>
+                <consumerResponse>
+                  <SYSMESSG>
+                    <systemMessageCode>0</systemMessageCode>
+                    <systemMessageText>Record Found</systemMessageText>
+                    <systemOutputFormatVersion>4.0</systemOutputFormatVersion>
+                    <systemMessageDescription>Record Found For Entered Data</systemMessageDescription>
+                  </SYSMESSG>
+                  <PENQUIRY>
