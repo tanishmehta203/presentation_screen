@@ -9,3 +9,112 @@
                     <systemMessageDescription>Record Found For Entered Data</systemMessageDescription>
                   </SYSMESSG>
                   <PENQUIRY>
+
+
+
+                              
+import streamlit as st
+from lxml import etree
+from datetime import datetime
+
+def load_xml(file_path):
+    try:
+        tree = etree.parse(file_path)
+        root = tree.getroot()
+        return root
+    except Exception as e:
+        st.error(f"Error loading XML file: {e}")
+        return None
+
+def calculate_months(date_str):
+    try:
+        x_date = datetime.strptime(date_str, '%d-%m-%Y')
+        y_date = datetime.now()
+        months_diff = (y_date.year - x_date.year) * 12 + (y_date.month - x_date.month)
+        return months_diff
+    except Exception as e:
+        st.error(f"Error calculating date difference: {e}")
+        return None
+
+
+def aggregatedG1(root):
+    for sysmsg in root.xpath('.//SYSMESSG'):
+        sys_code = sysmsg.xpath('systemMessageCode/text()')
+        sys_code = sys_code[0] if sys_code else None
+        
+        if sys_code == '0':
+            person_pf = root.xpath('.//PERSONPF')
+            if person_pf:
+                add_dt = person_pf[0].xpath('AddDt/text()')
+                if add_dt:
+                    return calculate_months(add_dt[0])
+                else:
+                    st.warning("AddDt not found.")
+                    return None
+            else:
+                st.warning("PERSONPF not found.")
+                return None
+        else:
+            st.warning(f"SystemMessageCode is not 0; found: {sys_code}")
+            return None
+    return None
+
+
+
+def aggregatedG2(root):
+    count = 0
+    for conscred in root.xpath('.//CONSCRED'):
+        
+    # extract of accountStatus and creditorname from PHDetail
+        phdetail = conscred.xpath('.//PHDETAIL')
+        if phdetail:
+            account_status = phdetail[0].xpath('AccountStatus/text()')
+            account_status = account_status[0] if account_status else None
+            
+            creditor_name = phdetail[0].xpath('CreditorName/text()')
+            creditor_name = creditor_name[0] if creditor_name else None
+            
+        else:
+            st.warning("PHDETAIL not found.")
+            
+     #Extract of accounttype from PSummary
+        psummary = conscred.xpath('.//PSUMMARY')
+        if psummary:
+            account_type = psummary[0].xpath('AccountType/text()')
+            account_type = account_type[0] if account_type else None
+        else:
+            st.warning("PSUMMARY not found.")
+            
+        #check criteria  
+        if account_status == 'C' and creditor_name == 'HSBC' and account_type == 'RM':
+            count += 1
+    
+    return count
+
+
+def main():
+    st.header("Output is :")
+      
+    xml_file_name = "./1_Account_035_Result.xml"
+    root = load_xml(xml_file_name)
+    
+    if root is not None:
+        # Display months difference
+        months = aggregatedG1(root)
+        if months is not None:
+            st.text(f"Months : {months}")
+        else:
+            st.warning("No matching records found with systemMessageCode = 0")
+
+     
+        # Display account criteria results
+        
+        total_accounts = aggregatedG2(root)
+        if total_accounts is not None:
+          st.text(f"Total number of accounts satisfied: {total_accounts}")
+       
+    else:
+        st.error("Failed to load XML file.")
+
+if _name_ == "_main_":
+    main()
